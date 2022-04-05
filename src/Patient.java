@@ -5,23 +5,34 @@ class Patient {
     private String password;
     private String phoneNumber;
     private String fileNumber;
+    private ArrayList<Rx> prescriptions;
+    private ArrayList<Appointment> appointments;
 
     public String getFullName() {
         return fullName;
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
     public String getFileNumber() {
         return fileNumber;
     }
 
-    public void setFileNumber(String fileNumber) {
+    public Patient(String fullName, String password, String phoneNumber, String fileNumber) {
+        this.fullName = fullName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
         this.fileNumber = fileNumber;
+
+        prescriptions = new ArrayList<Rx>();
+        appointments = new ArrayList<Appointment>();
+
+
     }
-    ArrayList<Rx> prescriptions = new ArrayList<Rx>();
-    ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 }

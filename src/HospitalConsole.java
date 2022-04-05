@@ -1,7 +1,13 @@
 import java.util.Scanner;
 
 class HospitalConsole {
-    static void showLoginRegisterPage() {
+    Hospital hospital;
+
+    public HospitalConsole(Hospital hospital) {
+        this.hospital = hospital;
+    }
+
+    void showLoginRegisterPage() {
         Scanner input = new Scanner(System.in);
         clearConsole();
         System.out.println("#### Welcome to UIAP Hospital ####");
@@ -13,21 +19,90 @@ class HospitalConsole {
         System.out.print("\nEnter menu code: ");
         String menuCode = input.next();
         if (menuCode.equals("1")) {
-            System.out.print("Enter your username: ");
-            String username = input.next();
-            System.out.print("Enter your password: ");
-            String password = input.next();
-            if (username.equals("Admin") && password.equals("Admin")) {
-                System.out.println("Logged in successfully.");
-            } else {
-                System.out.println("Username or password is incorrect.");
-            }
+            showAdminLoginPage();
         } else if (menuCode.equals("2")) {
         } else if (menuCode.equals("3")) {
         } else if (menuCode.equals("4")) {
+            showPatientRegistrationPage();
         } else {
             System.out.println("**** Error: Invalid menu code");
         }
+    }
+
+    //  Admin pages
+    void showAdminLoginPage() {
+        clearConsole();
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("#### UIAP Hospital :: Login as Admin ####");
+        System.out.print("\nEnter your username: ");
+        String username = input.nextLine();
+        System.out.print("Enter your password: ");
+        String password = input.nextLine();
+        if (username.equals("Admin") && password.equals("Admin")) {
+            System.out.println("Logged in successfully.");
+            showAdminPanel();
+        } else {
+            System.out.println("Username or password is incorrect.");
+        }
+    }
+
+    void showAdminPanel() {
+        clearConsole();
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("#### UIAP Hospital :: Admin Panel");
+        System.out.println("\n(1) Add a doctor");
+        System.out.println("(2) Add medicine");
+
+        System.out.print("\nEnter menu code: ");
+        String menuCode = input.next();
+        if (menuCode.equals("1")) {
+            showDoctorRegistrationPage();
+        } else if (menuCode.equals("2")) {
+        } else {
+            System.out.println("**** Error: Invalid menu code");
+        }
+    }
+
+    //  Patient pages
+    void showPatientRegistrationPage() {
+        clearConsole();
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("#### UIAP Hospital :: Registering as a Patient ####");
+
+        System.out.print("\nFull name: ");
+        String fullName = input.nextLine();
+
+        System.out.print("Password: ");
+        String password = input.nextLine();
+
+        System.out.print("Phone number: ");
+        String phoneNumber = input.nextLine();
+
+        hospital.registerPatient(fullName, password, phoneNumber);
+    }
+
+    //  Doctor pages
+    void showDoctorRegistrationPage() {
+        clearConsole();
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("#### UIAP Hospital :: Registering a Doctor ####");
+
+        System.out.print("\nFull name: ");
+        String fullName = input.nextLine();
+
+        System.out.print("Password: ");
+        String password = input.nextLine();
+
+        System.out.print("Major: ");
+        String major = input.nextLine();
+
+        hospital.registerDoctor(fullName, password, major);
     }
 
     static void clearConsole() {
