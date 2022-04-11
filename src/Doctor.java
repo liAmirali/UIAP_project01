@@ -1,7 +1,7 @@
 class Doctor {
     private String fullName;
     private String password;
-    private String personnelID;
+    private final String personnelID;
     private String major;
 
     public Doctor(String fullName, String password, String personnelID, String major) {
@@ -25,5 +25,13 @@ class Doctor {
 
     public String getMajor() {
         return major;
+    }
+
+    @Override
+    public String toString() {
+        return "fullName='" + getFullName() + '\'' +
+                ", password='" + getPassword() + '\'' +
+                ", personnelID='" + getPersonnelID() + '\'' +
+                ", major='" + getMajor() + '\'';
     }
 }

@@ -4,7 +4,7 @@ class Patient {
     private String fullName;
     private String password;
     private String phoneNumber;
-    private String fileNumber;
+    private final String fileNumber;
     private ArrayList<Rx> prescriptions;
     private ArrayList<Appointment> appointments;
 
@@ -32,7 +32,5 @@ class Patient {
 
         prescriptions = new ArrayList<Rx>();
         appointments = new ArrayList<Appointment>();
-
-
     }
 }
