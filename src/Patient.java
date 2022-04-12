@@ -5,8 +5,20 @@ class Patient {
     private String password;
     private String phoneNumber;
     private final String fileNumber;
-    private ArrayList<Rx> prescriptions;
-    private ArrayList<Appointment> appointments;
+    private final ArrayList<Rx> prescriptions;
+    private final ArrayList<Appointment> appointments;
+    private String descriptionOfProblem;
+
+    public Patient(String fullName, String password, String phoneNumber, String fileNumber, String descriptionOfProblem) {
+        this.fullName = fullName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.fileNumber = fileNumber;
+        this.descriptionOfProblem = descriptionOfProblem;
+
+        prescriptions = new ArrayList<>();
+        appointments = new ArrayList<>();
+    }
 
     public String getFullName() {
         return fullName;
@@ -24,13 +36,58 @@ class Patient {
         return fileNumber;
     }
 
-    public Patient(String fullName, String password, String phoneNumber, String fileNumber) {
-        this.fullName = fullName;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.fileNumber = fileNumber;
+    public ArrayList<Rx> getPrescriptions() {
+        return prescriptions;
+    }
 
-        prescriptions = new ArrayList<Rx>();
-        appointments = new ArrayList<Appointment>();
+    public ArrayList<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public String getDescriptionOfProblem() {
+        return descriptionOfProblem;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setDescriptionOfProblem(String descriptionOfProblem) {
+        this.descriptionOfProblem = descriptionOfProblem;
+    }
+
+    @Override
+    public String toString() {
+        return "fullName='" + fullName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", fileNumber='" + fileNumber + '\'' +
+                ", descriptionOfProblem='" + descriptionOfProblem + '\'';
+    }
+
+    void editInfo(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
+        if (!fullName.equals(""))
+            setFullName(fullName);
+        if (!password.equals(""))
+            setPassword(password);
+        if (!phoneNumber.equals(""))
+            setPhoneNumber(phoneNumber);
+        if (!descriptionOfProblem.equals(""))
+            setDescriptionOfProblem(descriptionOfProblem);
+    }
+
+    void addAppointment(Appointment appointment) {
+        appointments.add(appointment);
+    }
+
+    void addRx(Rx newPrescription) {
+        prescriptions.add(newPrescription);
     }
 }

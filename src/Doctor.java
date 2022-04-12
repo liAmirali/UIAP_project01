@@ -1,14 +1,24 @@
-class Doctor {
-    private String fullName;
-    private String password;
-    private final String personnelID;
-    private String major;
+import java.util.ArrayList;
+import java.util.Random;
 
-    public Doctor(String fullName, String password, String personnelID, String major) {
+class Doctor {
+    private final String fullName;
+    private final String password;
+    private final String personnelID;
+    private final String major;
+    final Secretary secretary;
+
+    public Doctor(String fullName, String password, String personnelID, String major, String secretaryName) {
         this.fullName = fullName;
         this.password = password;
         this.personnelID = personnelID;
         this.major = major;
+
+        Random rand = new Random();
+        String secretaryPersonnelID = String.valueOf(Math.abs(rand.nextInt()));
+
+        Secretary newSecretary = new Secretary(secretaryName, secretaryPersonnelID, personnelID);
+        this.secretary = newSecretary;
     }
 
     public String getFullName() {
@@ -30,7 +40,6 @@ class Doctor {
     @Override
     public String toString() {
         return "fullName='" + getFullName() + '\'' +
-                ", password='" + getPassword() + '\'' +
                 ", personnelID='" + getPersonnelID() + '\'' +
                 ", major='" + getMajor() + '\'';
     }

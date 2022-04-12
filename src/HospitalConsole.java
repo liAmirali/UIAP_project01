@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 class HospitalConsole {
@@ -55,11 +56,11 @@ class HospitalConsole {
     void showAdminPanel() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Admin Panel");
+        System.out.println("#### " + hospital.getName() + " :: Admin Panel ####");
         System.out.println("\n(1) Add a doctor");
         System.out.println("(2) Add medicine");
         System.out.println("(3) Print all doctors");
-        System.out.println("(4) Print all  medicines");
+        System.out.println("(4) Print all medicines");
         System.out.println("(5) Logout");
 
         System.out.print("\nEnter menu code: ");
@@ -75,7 +76,7 @@ class HospitalConsole {
     void showAddMedicinePage() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Adding a new medicine");
+        System.out.println("#### " + hospital.getName() + " :: Adding a new medicine ####");
 
         System.out.print("\nMedicine Name: ");
         String name = input.nextLine();
@@ -109,6 +110,27 @@ class HospitalConsole {
     }
 
     //  Doctor pages
+    void showDoctorRegistrationPage() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("#### " + hospital.getName() + " :: Registering a Doctor ####");
+
+        System.out.print("\nFull name: ");
+        String fullName = input.nextLine();
+
+        System.out.print("Password: ");
+        String password = input.nextLine();
+
+        System.out.print("Major: ");
+        String major = input.nextLine();
+
+        System.out.print("Secretary's name: ");
+        String secretaryName = input.nextLine();
+
+        Doctor newDoctor = hospital.registerDoctor(fullName, password, major, secretaryName);
+        System.out.println("New doctor was registered successfully! Personnel ID: " + newDoctor.getPersonnelID());
+    }
+
     void printAllDoctors() {
         ArrayList<Doctor> allDoctors = hospital.getDoctors();
         System.out.println("*** All Doctors in " + hospital.getName() + ":");
@@ -144,17 +166,95 @@ class HospitalConsole {
     void showDoctorPanel() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Doctor Panel");
-        System.out.println("\n(1) Print all patients");
+        System.out.println("#### " + hospital.getName() + " :: Doctor Panel ####");
+        System.out.println("\n(1) Print all appointments");
         System.out.println("(2) Print all medicines");
-        System.out.println("(3) Logout");
+        System.out.println("(3) Visit a patient");
+        System.out.println("(4) Logout");
 
         System.out.print("\nEnter menu code: ");
         String menuCode = input.nextLine();
-        if (menuCode.equals("1")) {
-        } else if (menuCode.equals("2")) printAllMedicines();
-        else if (menuCode.equals("3")) shouldKeepRendering = false;
+        if (menuCode.equals("1")) printAllDoctorAppointments(hospital.loggedInDoctor);
+        else if (menuCode.equals("2")) printAllMedicines();
+        else if (menuCode.equals("3")) visitAPatient();
+        else if (menuCode.equals("4")) shouldKeepRendering = false;
         else System.out.println("**** Error: Invalid menu code");
+    }
+
+    void printAllDoctorAppointments(Doctor doctor) {
+        System.out.println("Here is all the appointments:");
+
+        for (Appointment appointment : doctor.secretary.getGivenAppointments()) {
+            System.out.println(appointment.toString());
+        }
+    }
+
+    void visitAPatient() {
+        LocalDateTime nowDT = LocalDateTime.now();
+        boolean examined = false;
+        // Finding an appointment to visit right now
+        for (Appointment appointment : hospital.loggedInDoctor.secretary.getGivenAppointments()) {
+            if (appointment.getStartDateTime().isBefore(nowDT) && appointment.getEndDateTime().isAfter(nowDT)) {
+                System.out.println("## You a patient to visit!");
+                String patientFileNumber = appointment.getPatientFileNumber();
+
+                // Finding a patient with the same file number as the one in the appointment.
+                Patient selectedPatient = null;
+                for (Patient patient : hospital.getPatients())
+                    if (patient.getFileNumber().equals(patientFileNumber)) {
+                        selectedPatient = patient;
+                        break;
+                    }
+
+                System.out.println("Patient information:");
+                System.out.println(selectedPatient.toString());
+
+                System.out.println("");
+
+                ArrayList<Medicine> selectedMedicines = new ArrayList<>();
+                Scanner input = new Scanner(System.in);
+
+                boolean medicineIDFound = false;
+                while (true) {
+                    System.out.println("Enter the medicine ID (type EXIT to leave):");
+                    String enteredID = input.nextLine();
+
+                    if (enteredID.equals("EXIT")) break;
+
+                    for (Medicine medicine : hospital.getMedicines())
+                        if (medicine.getID().equals(enteredID)) {
+                            medicineIDFound = true;
+
+                            if (medicine.getProductionDate().isAfter(nowDT)) {
+                                System.out.println("This medicine has not been produced yet.");
+                                break;
+                            }
+
+                            if (medicine.getExpirationDate().isBefore(nowDT)) {
+                                System.out.println("This medicine has been expired.");
+                                break;
+                            }
+
+                            selectedMedicines.add(medicine);
+                            break;
+                        }
+
+                    if (!medicineIDFound) System.out.println("No medicine found with this ID");
+                }
+
+                Random rand = new Random();
+                String rxId = String.valueOf(Math.abs(rand.nextInt()));
+                Rx prescription = new Rx(rxId, nowDT, selectedMedicines, appointment.getDoctorPersonnelID(), selectedPatient.getFileNumber());
+                selectedPatient.addRx(prescription);
+
+                hospital.loggedInDoctor.secretary.removeAnAppointment(appointment.getNumber());
+
+                System.out.println("You examined the patient successfully!");
+                examined = true;
+            }
+            if (examined) break;
+        }
+        if (!examined) System.out.println("You don't have any patient to visit right now!");
     }
 
     //  Patient pages
@@ -172,8 +272,11 @@ class HospitalConsole {
         System.out.print("Phone number: ");
         String phoneNumber = input.nextLine();
 
-        String fileNumber = hospital.registerPatient(fullName, password, phoneNumber);
-        System.out.println("Patient was registered successfully! File Number: " + fileNumber);
+        System.out.println("How is everything about your health?");
+        String descriptionOfProblem = input.nextLine();
+
+        Patient newPatient = hospital.registerPatient(fullName, password, phoneNumber, descriptionOfProblem);
+        System.out.println("Patient was registered successfully! File Number: " + newPatient.getFileNumber());
     }
 
     void showPatientLoginPage() {
@@ -181,11 +284,13 @@ class HospitalConsole {
 
         System.out.println("#### " + hospital.getName() + " :: Logging in as a patient ####");
 
-        System.out.println("\nFile number: ");
+        System.out.print("\nFile number: ");
         String fileNumber = input.nextLine();
 
-        System.out.println("Password: ");
+        System.out.print("Password: ");
         String password = input.nextLine();
+
+        shouldKeepRendering = true;
 
         if (hospital.loginPatient(fileNumber, password)) {
             System.out.println("Logged in successfully!");
@@ -198,23 +303,25 @@ class HospitalConsole {
 
         System.out.println("#### " + hospital.getName() + " :: Patient Panel ####");
 
-        System.out.println("(1) Take an appointment");
+        System.out.println("(1) Make an appointment");
         System.out.println("(2) Edit info");
-        System.out.println("(3) Print and filter doctors");
-        System.out.println("(4) Make an appointment");
-        System.out.println("(5) Print all prescriptions");
-        System.out.println("(6) Logout");
+        System.out.println("(3) Print all doctors");
+        System.out.println("(4) Filter doctors by major");
+        System.out.println("(5) Print all appointments");
+        System.out.println("(6) Print all prescriptions");
+        System.out.println("(7) Logout");
 
         System.out.println("\nEnter menu code: ");
         String menuCode = input.nextLine();
 
-        if (menuCode.equals("1")) {
-        } else if (menuCode.equals("2")) showPatientProfileEdit();
-        else if (menuCode.equals("3")) {
-        } else if (menuCode.equals("4")) {
-        } else if (menuCode.equals("5")) {
-        } else if (menuCode.equals("6")) {
-        }
+        if (menuCode.equals("1")) showMakingAnAppointmentPage();
+        else if (menuCode.equals("2")) showPatientProfileEdit();
+        else if (menuCode.equals("3")) printAllDoctors();
+        else if (menuCode.equals("4")) showFilterDoctorPage();
+        else if (menuCode.equals("5")) printAllPatientAppointments(hospital.loggedInPatient);
+        else if (menuCode.equals("6")) printAllPatientPrescriptions(hospital.loggedInPatient);
+        else if (menuCode.equals("7")) shouldKeepRendering = false;
+        else System.out.println("*** Invalid menu code. ***");
     }
 
     void showPatientProfileEdit() {
@@ -230,25 +337,74 @@ class HospitalConsole {
         System.out.println("Enter your new phone number (leave empty to keep the old data): ");
         String newPhoneNumber = input.nextLine();
 
+        System.out.println("Enter any update about your health condition (leave empty to keep the old data): ");
+        String descriptionOfProblem = input.nextLine();
 
+        hospital.loggedInPatient.editInfo(newFullName, newPassword, newPhoneNumber, descriptionOfProblem);
+
+        System.out.println("Profile info was edited successfully");
     }
 
-    //  Doctor pages
-    void showDoctorRegistrationPage() {
+    void showFilterDoctorPage() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Registering a Doctor ####");
+        System.out.println("*** Enter the major to filter doctors:");
+        String filteringMajor = input.nextLine();
 
-        System.out.print("\nFull name: ");
-        String fullName = input.nextLine();
+        System.out.println("Result:");
+        ArrayList<Doctor> filteredDoctors = hospital.filterDoctorsByMajor(filteringMajor);
+        for (Doctor doctor : filteredDoctors) {
+            System.out.println(doctor.toString());
+        }
+    }
 
-        System.out.print("Password: ");
-        String password = input.nextLine();
+    void showMakingAnAppointmentPage() {
+        Scanner input = new Scanner(System.in);
+        System.out.println(hospital.getName() + " :: Making a new appointment ####");
 
-        System.out.print("Major: ");
-        String major = input.nextLine();
+        String personnelID;
+        Doctor selectedDoctor = null;
+        boolean doctorFound = false;
+        while (!doctorFound) {
+            System.out.println("Enter the doctor personnel ID: ");
+            personnelID = input.nextLine();
+            for (Doctor doctor : hospital.getDoctors()) {
+                if (doctor.getPersonnelID().equals(personnelID)) {
+                    selectedDoctor = doctor;
+                    doctorFound = true;
+                    break;
+                }
+            }
+            if (!doctorFound) System.out.println("No doctor found with this personnel ID.");
+        }
 
-        String personnelIDOfNewDoctor = hospital.registerDoctor(fullName, password, major);
-        System.out.println("New doctor was registered successfully! Personnel ID: " + personnelIDOfNewDoctor);
+        String visitTime;
+        while (true) {
+            System.out.println("Enter the time you want to be visited (yyyy-MM-dd HH:mm:ss): ");
+            visitTime = input.nextLine();
+
+            if (!selectedDoctor.secretary.appointmentTimeIsFree(visitTime)) {
+                System.out.println("Sorry! This time is already taken or the time has passed.");
+                continue;
+            }
+            break;
+        }
+
+        Appointment fixedAppointment = selectedDoctor.secretary.fixAnAppointment(hospital.loggedInPatient, visitTime, selectedDoctor.getPersonnelID());
+        System.out.println("Your appointment has been fixed! Number:" + fixedAppointment.getNumber());
+    }
+
+    void printAllPatientAppointments(Patient patient) {
+        System.out.println("Here is all your appointments:");
+
+        for (Appointment appointment : patient.getAppointments())
+            System.out.println(appointment.toString());
+    }
+
+    void printAllPatientPrescriptions(Patient patient) {
+        System.out.println("Here is all you prescriptions:");
+
+        for (Rx rx : patient.getPrescriptions())
+            System.out.println(rx.toString());
     }
 }

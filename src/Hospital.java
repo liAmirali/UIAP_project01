@@ -13,9 +13,9 @@ public class Hospital {
     // Constructors:
     public Hospital(String name) {
         this.name = name;
-        patients = new ArrayList<Patient>();
-        doctors = new ArrayList<Doctor>();
-        medicines = new ArrayList<Medicine>();
+        patients = new ArrayList<>();
+        doctors = new ArrayList<>();
+        medicines = new ArrayList<>();
     }
 
     // Getters:
@@ -51,7 +51,7 @@ public class Hospital {
     }
 
     //  Patients logics
-    String registerPatient(String fullName, String password, String phoneNumber) {
+    Patient registerPatient(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
         Random rand = new Random();
         String fileNumber;
         while (true) {
@@ -60,9 +60,9 @@ public class Hospital {
             break;
         }
 
-        Patient newPatient = new Patient(fullName, password, phoneNumber, fileNumber);
+        Patient newPatient = new Patient(fullName, password, phoneNumber, fileNumber, descriptionOfProblem);
         patients.add(newPatient);
-        return fileNumber;
+        return newPatient;
     }
 
     boolean patientFileNumberExists(String fileNumberToCheck) {
@@ -82,7 +82,7 @@ public class Hospital {
     }
 
     //  Doctors logics
-    String registerDoctor(String fullName, String password, String major) {
+    Doctor registerDoctor(String fullName, String password, String major, String secretaryName) {
         Random rand = new Random();
         String personnelID;
         while (true) {
@@ -91,9 +91,9 @@ public class Hospital {
             break;
         }
 
-        Doctor newDoctor = new Doctor(fullName, password, personnelID, major);
+        Doctor newDoctor = new Doctor(fullName, password, personnelID, major, secretaryName);
         doctors.add(newDoctor);
-        return personnelID;
+        return newDoctor;
     }
 
     boolean doctorPersonnelIDExists(String personnelIDToCheck) {
@@ -102,12 +102,28 @@ public class Hospital {
         return false;
     }
 
-    void addNewMedicine(String name, double price, String productionDate, String expirationDate) {
-        Medicine newMedicine = new Medicine(name, price, productionDate, expirationDate);
+    Medicine addNewMedicine(String name, double price, String productionDate, String expirationDate) {
+        Random rand = new Random();
+        String ID;
+        while (true) {
+            ID = String.valueOf(Math.abs(rand.nextInt()));
+            if (medicineIDExists(ID)) continue;
+            break;
+        }
+
+        Medicine newMedicine = new Medicine(name, ID, price, productionDate, expirationDate);
         medicines.add(newMedicine);
+
+        return newMedicine;
     }
 
-    boolean loginDoctor (String username, String password) {
+    boolean medicineIDExists(String IDToCheck) {
+        for (Medicine medicine : medicines)
+            if (medicine.getID().equals(IDToCheck)) return true;
+        return false;
+    }
+
+    boolean loginDoctor(String username, String password) {
         for (Doctor doctor : getDoctors())
             if (doctor.getPersonnelID().equals(username) && doctor.getPassword().equals(password)) {
                 setLoggedInDoctor(doctor);
@@ -115,5 +131,14 @@ public class Hospital {
             }
 
         return false;
+    }
+
+    ArrayList<Doctor> filterDoctorsByMajor(String major) {
+        ArrayList<Doctor> filteredDoctors = new ArrayList<>();
+        for (Doctor doctor : doctors) {
+            if (doctor.getMajor().equals(major)) filteredDoctors.add(doctor);
+        }
+
+        return filteredDoctors;
     }
 }
