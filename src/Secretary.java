@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-class Secretary {
+public class Secretary {
     private final String fullName;
     private final String personnelID;
     private final String doctorPersonnelID;

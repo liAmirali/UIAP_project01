@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-class Patient {
+public class Patient {
     private String fullName;
     private String password;
     private String phoneNumber;

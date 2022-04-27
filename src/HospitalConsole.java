@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-class HospitalConsole {
+public class HospitalConsole {
     Hospital hospital;
     boolean shouldKeepRendering;
 
@@ -209,7 +209,7 @@ class HospitalConsole {
                 System.out.println("Patient information:");
                 System.out.println(selectedPatient.toString());
 
-                System.out.println("");
+                System.out.println();
 
                 ArrayList<Medicine> selectedMedicines = new ArrayList<>();
                 Scanner input = new Scanner(System.in);

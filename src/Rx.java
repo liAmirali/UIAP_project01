@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-class Rx {
+public class Rx {
     private final String rxID;
     private final LocalDateTime writtenOn;
     private final ArrayList<Medicine> medicines;

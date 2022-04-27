@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-class Medicine {
+public class Medicine {
     private final String name;
     private final String ID;
     private final double price;

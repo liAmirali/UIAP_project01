@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-class Doctor {
+public class Doctor {
     private final String fullName;
     private final String password;
     private final String personnelID;

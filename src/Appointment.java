@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 
-class Appointment {
+public class Appointment {
     final private int number;
     final private LocalDateTime startDateTime;
     final private LocalDateTime endDateTime;
