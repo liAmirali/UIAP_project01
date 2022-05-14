@@ -1,3 +1,5 @@
+package Main;
+
 import java.util.ArrayList;
 
 public class Patient {
@@ -72,7 +74,7 @@ public class Patient {
                 ", descriptionOfProblem='" + descriptionOfProblem + '\'';
     }
 
-    void editInfo(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
+    public void editInfo(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
         if (!fullName.equals(""))
             setFullName(fullName);
         if (!password.equals(""))
@@ -83,11 +85,11 @@ public class Patient {
             setDescriptionOfProblem(descriptionOfProblem);
     }
 
-    void addAppointment(Appointment appointment) {
+    public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
     }
 
-    void addRx(Rx newPrescription) {
+    public void addRx(Rx newPrescription) {
         prescriptions.add(newPrescription);
     }
 }

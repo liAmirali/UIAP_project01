@@ -1,3 +1,5 @@
+package Main;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class Secretary {
         return givenAppointments;
     }
 
-    boolean appointmentTimeIsFree(String startTime) {
+    public boolean appointmentTimeIsFree(String startTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startTimeDT = LocalDateTime.parse(startTime, formatter);
         LocalDateTime endTimeDT = startTimeDT.plusMinutes(15);
@@ -53,7 +55,7 @@ public class Secretary {
         return true;
     }
 
-    Appointment fixAnAppointment(Patient patient, String startTime, String doctorPersonnelID) {
+    public Appointment fixAnAppointment(Patient patient, String startTime, String doctorPersonnelID) {
         int appointmentNumber = getGivenAppointments().size();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -67,7 +69,7 @@ public class Secretary {
         return newAppointment;
     }
 
-    void removeAnAppointment(int appointmentNumber) {
+    public void removeAnAppointment(int appointmentNumber) {
         for (int i = 0; i < getGivenAppointments().size(); i++)
             if (getGivenAppointments().get(i).getNumber() == appointmentNumber) getGivenAppointments().remove(i);
     }

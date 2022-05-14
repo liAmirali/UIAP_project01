@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+package Main;
+
 import java.util.Random;
 
 public class Doctor {
@@ -37,10 +38,12 @@ public class Doctor {
         return major;
     }
 
+    public Secretary getSecretary() {
+        return secretary;
+    }
+
     @Override
     public String toString() {
-        return "fullName='" + getFullName() + '\'' +
-                ", personnelID='" + getPersonnelID() + '\'' +
-                ", major='" + getMajor() + '\'';
+        return "fullName='" + getFullName() + '\'' + ", personnelID='" + getPersonnelID() + '\'' + ", major='" + getMajor() + '\'';
     }
 }

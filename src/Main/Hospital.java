@@ -1,7 +1,16 @@
+package Main;
+
+import Console.HospitalConsole;
+
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Hospital class is singleton
+ */
 public class Hospital {
+    private static Hospital hospitalInstance = null;
+
     private final String name;
     private final ArrayList<Patient> patients;
     private final ArrayList<Doctor> doctors;
@@ -10,15 +19,29 @@ public class Hospital {
     Doctor loggedInDoctor;
     Patient loggedInPatient;
 
+    final private HospitalConsole console;
+
     // Constructors:
-    public Hospital(String name) {
+    private Hospital(String name, HospitalConsole hospitalConsole) {
         this.name = name;
         patients = new ArrayList<>();
         doctors = new ArrayList<>();
         medicines = new ArrayList<>();
+        this.console = hospitalConsole;
     }
 
     // Getters:
+
+    public static Hospital getInstance(String name, HospitalConsole hospitalConsole) {
+        if (hospitalInstance == null)
+            hospitalInstance = new Hospital(name, hospitalConsole);
+
+        return hospitalInstance;
+    }
+
+    public static Hospital getInstance() {
+        return hospitalInstance;
+    }
     public ArrayList<Patient> getPatients() {
         return patients;
     }
@@ -30,9 +53,20 @@ public class Hospital {
     public ArrayList<Medicine> getMedicines() {
         return medicines;
     }
-
     public String getName() {
         return name;
+    }
+
+    public Doctor getLoggedInDoctor() {
+        return loggedInDoctor;
+    }
+
+    public Patient getLoggedInPatient() {
+        return loggedInPatient;
+    }
+
+    public HospitalConsole getConsole() {
+        return console;
     }
 
     //  Setters
@@ -45,13 +79,13 @@ public class Hospital {
     }
 
     //  Admin logics
-    boolean loginAdmin(String username, String password) {
+    public boolean loginAdmin(String username, String password) {
         if (username.equals("Admin") && password.equals("Admin")) return true;
         else return false;
     }
 
     //  Patients logics
-    Patient registerPatient(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
+    public Patient registerPatient(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
         Random rand = new Random();
         String fileNumber;
         while (true) {
@@ -65,13 +99,13 @@ public class Hospital {
         return newPatient;
     }
 
-    boolean patientFileNumberExists(String fileNumberToCheck) {
+    public boolean patientFileNumberExists(String fileNumberToCheck) {
         for (Patient patient : patients)
             if (patient.getFileNumber().equals(fileNumberToCheck)) return true;
         return false;
     }
 
-    boolean loginPatient(String username, String password) {
+    public boolean loginPatient(String username, String password) {
         for (Patient patient : getPatients())
             if (patient.getFileNumber().equals(username)) if (patient.getPassword().equals(password)) {
                 setLoggedInPatient(patient);
@@ -82,7 +116,7 @@ public class Hospital {
     }
 
     //  Doctors logics
-    Doctor registerDoctor(String fullName, String password, String major, String secretaryName) {
+    public Doctor registerDoctor(String fullName, String password, String major, String secretaryName) {
         Random rand = new Random();
         String personnelID;
         while (true) {
@@ -96,13 +130,13 @@ public class Hospital {
         return newDoctor;
     }
 
-    boolean doctorPersonnelIDExists(String personnelIDToCheck) {
+    public boolean doctorPersonnelIDExists(String personnelIDToCheck) {
         for (Doctor doctor : doctors)
             if (doctor.getPersonnelID().equals(personnelIDToCheck)) return true;
         return false;
     }
 
-    Medicine addNewMedicine(String name, double price, String productionDate, String expirationDate) {
+    public Medicine addNewMedicine(String name, double price, String productionDate, String expirationDate) {
         Random rand = new Random();
         String ID;
         while (true) {
@@ -117,13 +151,13 @@ public class Hospital {
         return newMedicine;
     }
 
-    boolean medicineIDExists(String IDToCheck) {
+    public boolean medicineIDExists(String IDToCheck) {
         for (Medicine medicine : medicines)
             if (medicine.getID().equals(IDToCheck)) return true;
         return false;
     }
 
-    boolean loginDoctor(String username, String password) {
+    public boolean loginDoctor(String username, String password) {
         for (Doctor doctor : getDoctors())
             if (doctor.getPersonnelID().equals(username) && doctor.getPassword().equals(password)) {
                 setLoggedInDoctor(doctor);
@@ -133,7 +167,7 @@ public class Hospital {
         return false;
     }
 
-    ArrayList<Doctor> filterDoctorsByMajor(String major) {
+    public ArrayList<Doctor> filterDoctorsByMajor(String major) {
         ArrayList<Doctor> filteredDoctors = new ArrayList<>();
         for (Doctor doctor : doctors) {
             if (doctor.getMajor().equals(major)) filteredDoctors.add(doctor);
