@@ -23,7 +23,6 @@ sealed public class HospitalConsole permits AdminConsole, DoctorConsole, Patient
     public static void clearConsole() {
         try {
             String operatingSystem = System.getProperty("os.name");
-            System.out.println("operatingSystem = " + operatingSystem);
             if (operatingSystem.contains("Windows")) {
                 ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls");
                 Process startProcess = pb.inheritIO().start();
