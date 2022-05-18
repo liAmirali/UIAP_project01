@@ -8,31 +8,38 @@ import java.util.Random;
 import java.util.Scanner;
 
 public non-sealed class DoctorConsole extends HospitalConsole {
-    private final Hospital hospital = Hospital.getInstance();
-
     public DoctorConsole() {}
 
     void printAllMedicines() {
-        ArrayList<Medicine> allMedicines = hospital.getMedicines();
-        System.out.println("*** All medicines in " + hospital.getName() + ":");
-        for (Medicine medicine : allMedicines) {
+        clearConsole();
+
+        ArrayList<Medicine> allMedicines = Hospital.getInstance().getMedicines();
+
+        System.out.println("*** All medicines in " + Hospital.getInstance().getName() + ":");
+        for (Medicine medicine : allMedicines)
             System.out.println(medicine.toString());
-        }
+
+        waitOnEnter();
     }
 
     void printAllDoctors() {
-        ArrayList<Doctor> allDoctors = hospital.getDoctors();
-        System.out.println("*** All Doctors in " + hospital.getName() + ":");
-        for (Doctor doctor : allDoctors) {
+        clearConsole();
+
+        ArrayList<Doctor> allDoctors = Hospital.getInstance().getDoctors();
+        System.out.println("*** All Doctors in " + Hospital.getInstance().getName() + ":");
+        for (Doctor doctor : allDoctors)
             System.out.println(doctor.toString());
-        }
+
+        waitOnEnter();
     }
 
     void showDoctorLoginPage() {
         Scanner input = new Scanner(System.in);
         shouldKeepRendering = true;
 
-        System.out.println("#### " + hospital.getName() + " :: Login as a Doctor ####");
+        clearConsole();
+
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Login as a Doctor ####");
 
         System.out.print("\nPersonnel ID: ");
         String username = input.nextLine();
@@ -40,14 +47,19 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         System.out.print("Password: ");
         String password = input.nextLine();
 
-        if (hospital.loginDoctor(username, password)) while (shouldKeepRendering) showDoctorPanel();
-        else System.out.println("Username or password is incorrect!");
+        if (Hospital.getInstance().loginDoctor(username, password)) while (shouldKeepRendering) showDoctorPanel();
+        else {
+            System.out.println("Username or password is incorrect!");
+            waitOnEnter();
+        }
     }
 
     void showDoctorPanel() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Doctor Panel ####");
+        clearConsole();
+
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Doctor Panel ####");
         System.out.println("\n(1) Print all appointments");
         System.out.println("(2) Print all medicines");
         System.out.println("(3) Visit a patient");
@@ -55,33 +67,42 @@ public non-sealed class DoctorConsole extends HospitalConsole {
 
         System.out.print("\nEnter menu code: ");
         String menuCode = input.nextLine();
-        if (menuCode.equals("1")) printAllDoctorAppointments(hospital.getLoggedInDoctor());
+        if (menuCode.equals("1")) printAllDoctorAppointments(Hospital.getInstance().getLoggedInDoctor());
         else if (menuCode.equals("2")) printAllMedicines();
         else if (menuCode.equals("3")) visitAPatient();
         else if (menuCode.equals("4")) shouldKeepRendering = false;
-        else System.out.println("**** Error: Invalid menu code");
+        else {
+            System.out.println("**** Error: Invalid menu code");
+            waitOnEnter();
+        }
     }
 
     void printAllDoctorAppointments(Doctor doctor) {
+        clearConsole();
+
         System.out.println("Here is all the appointments:");
 
-        for (Appointment appointment : doctor.getSecretary().getGivenAppointments()) {
+        for (Appointment appointment : doctor.getSecretary().getGivenAppointments())
             System.out.println(appointment.toString());
-        }
+
+        clearConsole();
     }
 
     void visitAPatient() {
         LocalDateTime nowDT = LocalDateTime.now();
         boolean examined = false;
+
+        clearConsole();
+
         // Finding an appointment to visit right now
-        for (Appointment appointment : hospital.getLoggedInDoctor().getSecretary().getGivenAppointments()) {
+        for (Appointment appointment : Hospital.getInstance().getLoggedInDoctor().getSecretary().getGivenAppointments()) {
             if (appointment.getStartDateTime().isBefore(nowDT) && appointment.getEndDateTime().isAfter(nowDT)) {
-                System.out.println("## You a patient to visit!");
+                System.out.println("## You have a patient to visit!");
                 String patientFileNumber = appointment.getPatientFileNumber();
 
                 // Finding a patient with the same file number as the one in the appointment.
                 Patient selectedPatient = null;
-                for (Patient patient : hospital.getPatients())
+                for (Patient patient : Hospital.getInstance().getPatients())
                     if (patient.getFileNumber().equals(patientFileNumber)) {
                         selectedPatient = patient;
                         break;
@@ -102,17 +123,19 @@ public non-sealed class DoctorConsole extends HospitalConsole {
 
                     if (enteredID.equals("EXIT")) break;
 
-                    for (Medicine medicine : hospital.getMedicines())
+                    for (Medicine medicine : Hospital.getInstance().getMedicines())
                         if (medicine.getID().equals(enteredID)) {
                             medicineIDFound = true;
 
                             if (medicine.getProductionDate().isAfter(nowDT)) {
                                 System.out.println("This medicine has not been produced yet.");
+                                waitOnEnter();
                                 break;
                             }
 
                             if (medicine.getExpirationDate().isBefore(nowDT)) {
                                 System.out.println("This medicine has been expired.");
+                                waitOnEnter();
                                 break;
                             }
 
@@ -120,7 +143,10 @@ public non-sealed class DoctorConsole extends HospitalConsole {
                             break;
                         }
 
-                    if (!medicineIDFound) System.out.println("No medicine found with this ID");
+                    if (!medicineIDFound) {
+                        System.out.println("No medicine found with this ID");
+                        waitOnEnter();
+                    }
                 }
 
                 Random rand = new Random();
@@ -128,13 +154,17 @@ public non-sealed class DoctorConsole extends HospitalConsole {
                 Rx prescription = new Rx(rxId, nowDT, selectedMedicines, appointment.getDoctorPersonnelID(), selectedPatient.getFileNumber());
                 selectedPatient.addRx(prescription);
 
-                hospital.getLoggedInDoctor().getSecretary().removeAnAppointment(appointment.getNumber());
+                Hospital.getInstance().getLoggedInDoctor().getSecretary().removeAnAppointment(appointment.getNumber());
 
                 System.out.println("You examined the patient successfully!");
+                waitOnEnter();
                 examined = true;
             }
             if (examined) break;
         }
-        if (!examined) System.out.println("You don't have any patient to visit right now!");
+        if (!examined) {
+            System.out.println("You don't have any patient to visit right now!");
+            waitOnEnter();
+        }
     }
 }

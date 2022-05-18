@@ -8,30 +8,36 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public non-sealed class AdminConsole extends HospitalConsole {
-    private final Hospital hospital = Hospital.getInstance();
-
     public AdminConsole() {}
 
     void showAdminLoginPage() {
         Scanner input = new Scanner(System.in);
 
+        clearConsole();
+
         shouldKeepRendering = true;
 
-        System.out.println("#### " + hospital.getName() + " :: Login as Admin ####");
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Login as Admin ####");
         System.out.print("\nEnter your username: ");
         String username = input.nextLine();
         System.out.print("Enter your password: ");
         String password = input.nextLine();
-        if (hospital.loginAdmin(username, password)) {
+        if (Hospital.getInstance().loginAdmin(username, password)) {
             System.out.println("Logged in successfully.");
+            waitOnEnter();
             while (shouldKeepRendering) showAdminPanel();
-        } else System.out.println("Username or password is incorrect.");
+        } else {
+            System.out.println("Username or password is incorrect.");
+            waitOnEnter();
+        }
     }
 
     void showAdminPanel() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Admin Panel ####");
+        clearConsole();
+
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Admin Panel ####");
         System.out.println("\n(1) Add a doctor");
         System.out.println("(2) Add medicine");
         System.out.println("(3) Print all doctors");
@@ -42,16 +48,21 @@ public non-sealed class AdminConsole extends HospitalConsole {
         String menuCode = input.nextLine();
         if (menuCode.equals("1")) showDoctorRegistrationPage();
         else if (menuCode.equals("2")) showAddMedicinePage();
-        else if (menuCode.equals("3")) hospital.getConsole().doctorConsole.printAllDoctors();
-        else if (menuCode.equals("4")) hospital.getConsole().doctorConsole.printAllMedicines();
+        else if (menuCode.equals("3")) Hospital.getInstance().getConsole().doctorConsole.printAllDoctors();
+        else if (menuCode.equals("4")) Hospital.getInstance().getConsole().doctorConsole.printAllMedicines();
         else if (menuCode.equals("5")) shouldKeepRendering = false;
-        else System.out.println("**** Error: Invalid menu code");
+        else {
+            System.out.println("**** Error: Invalid menu code");
+            waitOnEnter();
+        }
     }
 
     public void showDoctorRegistrationPage() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Registering a Doctor ####");
+        clearConsole();
+
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Registering a Doctor ####");
 
         System.out.print("\nFull name: ");
         String fullName = input.nextLine();
@@ -65,14 +76,18 @@ public non-sealed class AdminConsole extends HospitalConsole {
         System.out.print("Secretary's name: ");
         String secretaryName = input.nextLine();
 
-        Doctor newDoctor = hospital.registerDoctor(fullName, password, major, secretaryName);
+        Doctor newDoctor = Hospital.getInstance().registerDoctor(fullName, password, major, secretaryName);
         System.out.println("New doctor was registered successfully! Personnel ID: " + newDoctor.getPersonnelID());
+
+        waitOnEnter();
     }
 
     void showAddMedicinePage() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + hospital.getName() + " :: Adding a new medicine ####");
+        clearConsole();
+
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Adding a new medicine ####");
 
         System.out.print("\nMedicine Name: ");
         String name = input.nextLine();
@@ -100,8 +115,10 @@ public non-sealed class AdminConsole extends HospitalConsole {
         } else if (rightNowDT.isAfter(expirationDT)) {
             System.out.println("You can't add medicines that are already expired!");
         } else {
-            hospital.addNewMedicine(name, price, productionDate, expirationDate);
+            Hospital.getInstance().addNewMedicine(name, price, productionDate, expirationDate);
             System.out.println("Medicine was added successfully.");
         }
+
+        waitOnEnter();
     }
 }
