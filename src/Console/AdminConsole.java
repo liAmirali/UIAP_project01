@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public non-sealed class AdminConsole extends HospitalConsole {
-    HospitalController hospitalController;
-    DoctorController doctorController;
+    HospitalController HospitalController;
+    DoctorController DoctorController;
 
     public AdminConsole() {
-        hospitalController = new HospitalController();
-        doctorController = new DoctorController();
+        HospitalController = new HospitalController();
+        DoctorController = new DoctorController();
     }
 
     void showAdminLoginPage() {
@@ -30,7 +30,7 @@ public non-sealed class AdminConsole extends HospitalConsole {
         String username = input.nextLine();
         System.out.print("Enter your password: ");
         String password = input.nextLine();
-        if (hospitalController.loginAdmin(username, password)) {
+        if (HospitalController.loginAdmin(username, password)) {
             System.out.println("Logged in successfully.");
             waitOnEnter();
             while (shouldKeepRendering) showAdminPanel();
@@ -80,7 +80,7 @@ public non-sealed class AdminConsole extends HospitalConsole {
             System.out.println("\nUsername: D");
             username = 'D' + input.nextLine();
 
-            if (doctorController.usernameExist(username)) {
+            if (DoctorController.usernameExist(username)) {
                 System.out.println("This username already exists. Try another one.");
                 continue;
             }
@@ -108,7 +108,7 @@ public non-sealed class AdminConsole extends HospitalConsole {
         System.out.println("Biography: ");
         String biography = input.nextLine();
 
-        Doctor newDoctor = doctorController.registerDoctor(fullName, username, password, phoneNumber, email, mandatoryWorkHour, hourlyWage, major, biography);
+        Doctor newDoctor = DoctorController.registerDoctor(fullName, username, password, phoneNumber, email, mandatoryWorkHour, hourlyWage, major, biography);
         System.out.println("New doctor was registered successfully! Personnel ID: " + newDoctor.getPersonnelID());
 
         waitOnEnter();
@@ -147,7 +147,7 @@ public non-sealed class AdminConsole extends HospitalConsole {
         } else if (rightNowDT.isAfter(expirationDT)) {
             System.out.println("You can't add medicines that are already expired!");
         } else {
-            hospitalController.addNewMedicine(name, price, productionDate, expirationDate);
+            HospitalController.addNewMedicine(name, price, productionDate, expirationDate);
             System.out.println("Medicine was added successfully.");
         }
 

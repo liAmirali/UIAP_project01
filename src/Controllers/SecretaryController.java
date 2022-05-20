@@ -9,15 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class SecretaryController {
-    DoctorController doctorController;
-    PatientController patientController;
-
-    public SecretaryController() {
-        this.doctorController = new DoctorController();
-        this.patientController = new PatientController();
-    }
-
-    public boolean appointmentTimeIsFree(String doctorPersonnelID, String startTime) {
+    public static boolean appointmentTimeIsFree(String doctorPersonnelID, String startTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startTimeDT = LocalDateTime.parse(startTime, formatter);
         LocalDateTime endTimeDT = startTimeDT.plusMinutes(15);
@@ -27,7 +19,7 @@ public class SecretaryController {
 
         Doctor doctor;
         try {
-            doctor = doctorController.findDoctorWithPersonnelID(doctorPersonnelID);
+            doctor = DoctorController.findDoctorWithPersonnelID(doctorPersonnelID);
         } catch (DoctorPersonnelIDNotExistsException e) {
             return false;
         }
@@ -45,10 +37,10 @@ public class SecretaryController {
         return true;
     }
 
-    public Appointment fixAnAppointment(String patientFileNumber, String startTime, String doctorPersonnelID, boolean isEmergency) {
+    public static Appointment fixAnAppointment(String patientFileNumber, String startTime, String doctorPersonnelID, boolean isEmergency) {
         Doctor doctor;
         try {
-            doctor = doctorController.findDoctorWithPersonnelID(doctorPersonnelID);
+            doctor = DoctorController.findDoctorWithPersonnelID(doctorPersonnelID);
         } catch (DoctorPersonnelIDNotExistsException e) {
             return null;
         }
@@ -61,15 +53,15 @@ public class SecretaryController {
 
         Appointment newAppointment = new Appointment(appointmentNumber, startTimeDT, endTimeDT, patientFileNumber, doctorPersonnelID, isEmergency);
         doctor.getSecretary().getGivenAppointments().add(newAppointment);
-        patientController.addAppointment(patientFileNumber, newAppointment);
+        PatientController.addAppointment(patientFileNumber, newAppointment);
 
         return newAppointment;
     }
 
-    public void removeAnAppointment(String doctorPersonnelID, int appointmentNumber) {
+    public static void removeAnAppointment(String doctorPersonnelID, int appointmentNumber) {
         Doctor doctor;
         try {
-            doctor = doctorController.findDoctorWithPersonnelID(doctorPersonnelID);
+            doctor = DoctorController.findDoctorWithPersonnelID(doctorPersonnelID);
         } catch (DoctorPersonnelIDNotExistsException e) {
             return;
         }
@@ -79,13 +71,13 @@ public class SecretaryController {
                 doctor.getSecretary().getGivenAppointments().remove(i);
     }
 
-    public boolean secretaryPersonnelIDExists(String personnelIDToCheck) {
+    public static boolean secretaryPersonnelIDExists(String personnelIDToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getSecretary().getPersonnelID().equals(personnelIDToCheck)) return true;
         return false;
     }
 
-    public boolean usernameExist(String usernameToCheck) {
+    public static boolean usernameExist(String usernameToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getSecretary().getUsername().equals(usernameToCheck)) return true;
 

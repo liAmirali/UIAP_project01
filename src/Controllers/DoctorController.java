@@ -9,13 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class DoctorController {
-    SecretaryController secretaryController;
-
-    public DoctorController() {
-        this.secretaryController = new SecretaryController();
-    }
-
-    public ArrayList<Doctor> filterDoctorsByMajor(String major) {
+    public static ArrayList<Doctor> filterDoctorsByMajor(String major) {
         ArrayList<Doctor> filteredDoctors = new ArrayList<>();
         for (Doctor doctor : Hospital.getInstance().getDoctors()) {
             if (doctor.getMajor().equals(major)) filteredDoctors.add(doctor);
@@ -24,7 +18,7 @@ public class DoctorController {
         return filteredDoctors;
     }
 
-    public Doctor registerDoctor(String fullName, String username, String password, String phoneNumber, String email, int mandatoryWorkHour, int hourlyWage, String major, String biography) {
+    public static Doctor registerDoctor(String fullName, String username, String password, String phoneNumber, String email, int mandatoryWorkHour, int hourlyWage, String major, String biography) {
         Random rand = new Random();
         String personnelID;
         while (true) {
@@ -38,12 +32,12 @@ public class DoctorController {
         return newDoctor;
     }
 
-    public Secretary hireSecretary(String fullName, String username, String password, String phoneNumber, String email, int mandatoryWorkHour, int hourlyWage, String doctorPersonnelID) {
+    public static Secretary hireSecretary(String fullName, String username, String password, String phoneNumber, String email, int mandatoryWorkHour, int hourlyWage, String doctorPersonnelID) {
         Random rand = new Random();
         String personnelID;
         while (true) {
             personnelID = String.valueOf(Math.abs(rand.nextInt()));
-            if (secretaryController.secretaryPersonnelIDExists(personnelID)) continue;
+            if (SecretaryController.secretaryPersonnelIDExists(personnelID)) continue;
             break;
         }
 
@@ -57,20 +51,20 @@ public class DoctorController {
         }
     }
 
-    public boolean doctorPersonnelIDExists(String personnelIDToCheck) {
+    public static boolean doctorPersonnelIDExists(String personnelIDToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getPersonnelID().equals(personnelIDToCheck)) return true;
         return false;
     }
 
-    public Doctor findDoctorWithPersonnelID(String personnelIDToCheck) throws DoctorPersonnelIDNotExistsException {
+    public static Doctor findDoctorWithPersonnelID(String personnelIDToCheck) throws DoctorPersonnelIDNotExistsException {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getPersonnelID().equals(personnelIDToCheck)) return doctor;
 
         throw new DoctorPersonnelIDNotExistsException("No doctor was found with this personnelID");
     }
 
-    public boolean usernameExist(String usernameToCheck) {
+    public static boolean usernameExist(String usernameToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getUsername().equals(usernameToCheck)) return true;
 

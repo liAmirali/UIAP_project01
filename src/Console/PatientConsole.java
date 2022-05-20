@@ -14,18 +14,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public non-sealed class PatientConsole extends HospitalConsole {
-    PatientController controller;
-    HospitalController hospitalController;
-    DoctorController doctorController;
-    SecretaryController secretaryController;
-
-    public PatientConsole() {
-        controller = new PatientController();
-        hospitalController = new HospitalController();
-        doctorController = new DoctorController();
-        secretaryController = new SecretaryController();
-    }
-
     void showPatientRegistrationPage() {
         Scanner input = new Scanner(System.in);
 
@@ -41,7 +29,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
             System.out.println("\nUsername: P");
             username = 'P' + input.nextLine();
 
-            if (controller.usernameExist(username)) {
+            if (PatientController.usernameExist(username)) {
                 System.out.println("This username already exists. Try another one.");
                 continue;
             }
@@ -60,7 +48,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
         System.out.println("How is everything about your health?");
         String descriptionOfProblem = input.nextLine();
 
-        Patient newPatient = controller.registerPatient(fullName, username, email, password, phoneNumber, descriptionOfProblem);
+        Patient newPatient = PatientController.registerPatient(fullName, username, email, password, phoneNumber, descriptionOfProblem);
         System.out.println("Patient was registered successfully! File Number: " + newPatient.getFileNumber());
 
         waitOnEnter();
@@ -81,7 +69,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
 
         shouldKeepRendering = true;
 
-        if (hospitalController.loginPatient(fileNumber, password)) {
+        if (HospitalController.loginPatient(fileNumber, password)) {
             System.out.println("Logged in successfully!");
             waitOnEnter();
             while (shouldKeepRendering) showPatientPanel();
@@ -141,7 +129,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
         System.out.println("Enter any update about your health condition (leave empty to keep the old data): ");
         String descriptionOfProblem = input.nextLine();
 
-        controller.editInfo(Hospital.getInstance().getLoggedInPatient().getFileNumber(), newFullName, newPassword, newPhoneNumber, descriptionOfProblem);
+        PatientController.editInfo(Hospital.getInstance().getLoggedInPatient().getFileNumber(), newFullName, newPassword, newPhoneNumber, descriptionOfProblem);
 
         System.out.println("Profile info was edited successfully");
 
@@ -157,7 +145,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
         String filteringMajor = input.nextLine();
 
         System.out.println("Result:");
-        ArrayList<Doctor> filteredDoctors = doctorController.filterDoctorsByMajor(filteringMajor);
+        ArrayList<Doctor> filteredDoctors = DoctorController.filterDoctorsByMajor(filteringMajor);
         for (Doctor doctor : filteredDoctors) {
             System.out.println(doctor.toString());
         }
@@ -196,7 +184,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
             System.out.println("Enter the time you want to be visited (yyyy-MM-dd HH:mm:ss): ");
             visitTime = input.nextLine();
 
-            if (!secretaryController.appointmentTimeIsFree(selectedDoctor.getPersonnelID(), visitTime)) {
+            if (!SecretaryController.appointmentTimeIsFree(selectedDoctor.getPersonnelID(), visitTime)) {
                 System.out.println("Sorry! This time is already taken or the time has passed.");
                 waitOnEnter();
                 continue;
@@ -219,7 +207,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
             } else System.out.println("Enter either \"y\" or \"n\".");
         }
 
-        Appointment fixedAppointment = secretaryController.fixAnAppointment(Hospital.getInstance().getLoggedInPatient().getFileNumber(), visitTime, selectedDoctor.getPersonnelID(), isEmergency);
+        Appointment fixedAppointment = SecretaryController.fixAnAppointment(Hospital.getInstance().getLoggedInPatient().getFileNumber(), visitTime, selectedDoctor.getPersonnelID(), isEmergency);
         System.out.println("Your appointment has been fixed! Number:" + fixedAppointment.getNumber());
         waitOnEnter();
     }

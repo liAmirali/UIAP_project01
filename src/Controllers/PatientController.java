@@ -9,7 +9,7 @@ import Main.Rx;
 import java.util.Random;
 
 public class PatientController {
-    public void editInfo(String fileNumber, String fullName, String password, String phoneNumber, String descriptionOfProblem) {
+    public static void editInfo(String fileNumber, String fullName, String password, String phoneNumber, String descriptionOfProblem) {
         Patient patient;
         try {
             patient = findPatientWithFileNumber(fileNumber);
@@ -23,7 +23,7 @@ public class PatientController {
         if (!descriptionOfProblem.equals("")) patient.setDescriptionOfProblem(descriptionOfProblem);
     }
 
-    public void addAppointment(String fileNumber, Appointment appointment) {
+    public static void addAppointment(String fileNumber, Appointment appointment) {
         Patient patient;
         try {
             patient = findPatientWithFileNumber(fileNumber);
@@ -34,7 +34,7 @@ public class PatientController {
         patient.getAppointments().add(appointment);
     }
 
-    public void addRx(String fileNumber, Rx newPrescription) {
+    public static void addRx(String fileNumber, Rx newPrescription) {
         Patient patient;
         try {
             patient = findPatientWithFileNumber(fileNumber);
@@ -45,7 +45,7 @@ public class PatientController {
         patient.getPrescriptions().add(newPrescription);
     }
 
-    public Patient registerPatient(String fullName, String username, String email, String password, String phoneNumber, String descriptionOfProblem) {
+    public static Patient registerPatient(String fullName, String username, String email, String password, String phoneNumber, String descriptionOfProblem) {
         Random rand = new Random();
         String fileNumber;
         while (true) {
@@ -59,20 +59,20 @@ public class PatientController {
         return newPatient;
     }
 
-    public boolean patientFileNumberExists(String fileNumberToCheck) {
+    public static boolean patientFileNumberExists(String fileNumberToCheck) {
         for (Patient patient : Hospital.getInstance().getPatients())
             if (patient.getFileNumber().equals(fileNumberToCheck)) return true;
         return false;
     }
 
-    public boolean usernameExist(String usernameToCheck) {
+    public static boolean usernameExist(String usernameToCheck) {
         for (Patient patient : Hospital.getInstance().getPatients())
             if (patient.getUsername().equals(usernameToCheck)) return true;
 
         return false;
     }
 
-    public Patient findPatientWithFileNumber(String fileNumber) throws PatientFileNumberNotExistsException {
+    public static Patient findPatientWithFileNumber(String fileNumber) throws PatientFileNumberNotExistsException {
         for (Patient patient : Hospital.getInstance().getPatients())
             if (patient.getFileNumber().equals(fileNumber)) return patient;
 

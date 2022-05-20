@@ -14,18 +14,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 public non-sealed class DoctorConsole extends HospitalConsole {
-    HospitalController hospitalController;
-    DoctorController doctorController;
-    PatientController patientController;
-    SecretaryController secretaryController;
-
-    public DoctorConsole() {
-        hospitalController = new HospitalController();
-        doctorController = new DoctorController();
-        patientController = new PatientController();
-        secretaryController = new SecretaryController();
-    }
-
     void showDoctorLoginPage() {
         Scanner input = new Scanner(System.in);
         shouldKeepRendering = true;
@@ -40,7 +28,7 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         System.out.print("Password: ");
         String password = input.nextLine();
 
-        if (hospitalController.loginDoctor(username, password)) while (shouldKeepRendering) showDoctorPanel();
+        if (HospitalController.loginDoctor(username, password)) while (shouldKeepRendering) showDoctorPanel();
         else {
             System.out.println("Username or password is incorrect!");
             waitOnEnter();
@@ -163,8 +151,8 @@ public non-sealed class DoctorConsole extends HospitalConsole {
                 Random rand = new Random();
                 String rxId = String.valueOf(Math.abs(rand.nextInt()));
                 Rx prescription = new Rx(rxId, nowDT, selectedMedicines, appointment.getDoctorPersonnelID(), selectedPatient.getFileNumber());
-                patientController.addRx(selectedPatient.getFileNumber(), prescription);
-                secretaryController.removeAnAppointment(appointment.getDoctorPersonnelID(), appointment.getNumber());
+                PatientController.addRx(selectedPatient.getFileNumber(), prescription);
+                SecretaryController.removeAnAppointment(appointment.getDoctorPersonnelID(), appointment.getNumber());
 
                 System.out.println("You examined the patient successfully!");
                 waitOnEnter();
@@ -204,7 +192,7 @@ public non-sealed class DoctorConsole extends HospitalConsole {
             System.out.println("\nUsername: S");
             username = 'S' + input.nextLine();
 
-            if (secretaryController.usernameExist(username)) {
+            if (SecretaryController.usernameExist(username)) {
                 System.out.println("This username already exists. Try another one.");
                 continue;
             }
@@ -226,7 +214,7 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         System.out.println("Hourly wage: ");
         int hourlyWage = input.nextInt();
 
-        Secretary newSecretary = doctorController.hireSecretary(fullName, username, password, phoneNumber, email, mandatoryWorkHour, hourlyWage, Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
+        Secretary newSecretary = DoctorController.hireSecretary(fullName, username, password, phoneNumber, email, mandatoryWorkHour, hourlyWage, Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
         System.out.println("New secretary was hired successfully! Personnel ID: " + newSecretary.getPersonnelID());
         System.out.println();
 

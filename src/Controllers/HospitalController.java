@@ -8,37 +8,31 @@ import User.Doctor;
 import java.util.Random;
 
 public class HospitalController {
-    private final Hospital hospital;
-
-    public HospitalController() {
-        hospital = Hospital.getInstance();
-    }
-
-    public boolean loginAdmin(String username, String password) {
+    public static boolean loginAdmin(String username, String password) {
         return username.equals("Admin") && password.equals("Admin");
     }
 
-    public boolean loginDoctor(String username, String password) {
-        for (Doctor doctor : hospital.getDoctors())
+    public static boolean loginDoctor(String username, String password) {
+        for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getPersonnelID().equals(username) && doctor.getPassword().equals(password)) {
-                hospital.setLoggedInDoctor(doctor);
+                Hospital.getInstance().setLoggedInDoctor(doctor);
                 return true;
             }
 
         return false;
     }
 
-    public boolean loginPatient(String username, String password) {
-        for (Patient patient : hospital.getPatients())
+    public static boolean loginPatient(String username, String password) {
+        for (Patient patient : Hospital.getInstance().getPatients())
             if (patient.getFileNumber().equals(username) && patient.getPassword().equals(password)) {
-                hospital.setLoggedInPatient(patient);
+                Hospital.getInstance().setLoggedInPatient(patient);
                 return true;
             }
 
         return false;
     }
 
-    public Medicine addNewMedicine(String name, double price, String productionDate, String expirationDate) {
+    public static Medicine addNewMedicine(String name, double price, String productionDate, String expirationDate) {
         Random rand = new Random();
         String ID;
         while (true) {
@@ -48,13 +42,13 @@ public class HospitalController {
         }
 
         Medicine newMedicine = new Medicine(name, ID, price, productionDate, expirationDate);
-        hospital.getMedicines().add(newMedicine);
+        Hospital.getInstance().getMedicines().add(newMedicine);
 
         return newMedicine;
     }
 
-    public boolean medicineIDExists(String IDToCheck) {
-        for (Medicine medicine : hospital.getMedicines())
+    public static boolean medicineIDExists(String IDToCheck) {
+        for (Medicine medicine : Hospital.getInstance().getMedicines())
             if (medicine.getID().equals(IDToCheck)) return true;
         return false;
     }
