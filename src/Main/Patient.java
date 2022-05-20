@@ -1,37 +1,21 @@
 package Main;
 
+import User.User;
+
 import java.util.ArrayList;
 
-public class Patient {
-    private String fullName;
-    private String password;
-    private String phoneNumber;
+public class Patient extends User {
     private final String fileNumber;
     private final ArrayList<Rx> prescriptions;
     private final ArrayList<Appointment> appointments;
     private String descriptionOfProblem;
 
-    public Patient(String fullName, String password, String phoneNumber, String fileNumber, String descriptionOfProblem) {
-        this.fullName = fullName;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
+    public Patient(String fullName, String username, String password, String phoneNumber, String email, String fileNumber, String descriptionOfProblem) {
+        super(fullName, username, password, phoneNumber, email);
         this.fileNumber = fileNumber;
+        this.prescriptions = new ArrayList<>();
+        this.appointments = new ArrayList<>();
         this.descriptionOfProblem = descriptionOfProblem;
-
-        prescriptions = new ArrayList<>();
-        appointments = new ArrayList<>();
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
     public String getFileNumber() {
@@ -50,46 +34,7 @@ public class Patient {
         return descriptionOfProblem;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public void setDescriptionOfProblem(String descriptionOfProblem) {
         this.descriptionOfProblem = descriptionOfProblem;
-    }
-
-    @Override
-    public String toString() {
-        return "fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", fileNumber='" + fileNumber + '\'' +
-                ", descriptionOfProblem='" + descriptionOfProblem + '\'';
-    }
-
-    public void editInfo(String fullName, String password, String phoneNumber, String descriptionOfProblem) {
-        if (!fullName.equals(""))
-            setFullName(fullName);
-        if (!password.equals(""))
-            setPassword(password);
-        if (!phoneNumber.equals(""))
-            setPhoneNumber(phoneNumber);
-        if (!descriptionOfProblem.equals(""))
-            setDescriptionOfProblem(descriptionOfProblem);
-    }
-
-    public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
-    }
-
-    public void addRx(Rx newPrescription) {
-        prescriptions.add(newPrescription);
     }
 }

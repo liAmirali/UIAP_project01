@@ -40,11 +40,7 @@ public class Rx {
 
     @Override
     public String toString() {
-        return "rxID='" + getRxID() + '\'' +
-                ", writtenOn=" + getWrittenOn() +
-                ", medicines=" + getMedicines() +
-                ", doctorPersonnelID='" + getDoctorPersonnelID() + '\'' +
-                ", patientFileNumber='" + getPatientFileNumber() + '\'';
+        return "rxID='" + getRxID() + '\'' + ", writtenOn=" + getWrittenOn() + ", medicines=" + getMedicines() + ", doctorPersonnelID='" + getDoctorPersonnelID() + '\'' + ", patientFileNumber='" + getPatientFileNumber() + '\'';
     }
 }
 

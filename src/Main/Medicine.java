@@ -42,10 +42,6 @@ public class Medicine {
 
     @Override
     public String toString() {
-        return "name='" + getName() + '\'' +
-                ", price=" + getPrice() +
-                ", productionDate=" +  getProductionDate() +
-                ", expirationDate=" + getExpirationDate() +
-                ", ID='" + getID() + '\'';
+        return "name='" + getName() + '\'' + ", price=" + getPrice() + ", productionDate=" + getProductionDate() + ", expirationDate=" + getExpirationDate() + ", ID='" + getID() + '\'';
     }
 }

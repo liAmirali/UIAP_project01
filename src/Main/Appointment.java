@@ -8,13 +8,16 @@ public class Appointment {
     final private LocalDateTime endDateTime;
     final private String patientFileNumber;
     final private String doctorPersonnelID;
+    private final boolean isEmergency;
 
-    public Appointment(int number, LocalDateTime startDateTime, LocalDateTime endDateTime, String patientFileNumber, String doctorPersonnelID) {
+    public Appointment(int number, LocalDateTime startDateTime, LocalDateTime endDateTime, String patientFileNumber,
+                       String doctorPersonnelID, boolean isEmergency) {
         this.number = number;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.patientFileNumber = patientFileNumber;
         this.doctorPersonnelID = doctorPersonnelID;
+        this.isEmergency = isEmergency;
     }
 
     public int getNumber() {
@@ -27,7 +30,8 @@ public class Appointment {
                 ", startDateTime=" + startDateTime +
                 ", endDateTime=" + endDateTime +
                 ", patientFileNumber='" + patientFileNumber + '\'' +
-                ", doctorPersonnelID='" + doctorPersonnelID + '\'';
+                ", doctorPersonnelID='" + doctorPersonnelID + '\'' +
+                ", isEmergency=" + isEmergency;
     }
 
     public LocalDateTime getStartDateTime() {

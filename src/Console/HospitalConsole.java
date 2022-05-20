@@ -1,8 +1,8 @@
 package Console;
 
-import java.util.Scanner;
-
 import Main.Hospital;
+
+import java.util.Scanner;
 
 sealed public class HospitalConsole permits AdminConsole, DoctorConsole, PatientConsole {
     boolean shouldKeepRendering;
