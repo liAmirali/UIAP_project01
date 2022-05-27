@@ -26,10 +26,10 @@ public non-sealed class PatientConsole extends HospitalConsole {
 
         String username;
         while (true) {
-            System.out.println("\nUsername: P");
+            System.out.print("\nUsername: P");
             username = 'P' + input.nextLine();
 
-            if (PatientController.usernameExist(username)) {
+            if (PatientController.usernameExists(username)) {
                 System.out.println("This username already exists. Try another one.");
                 continue;
             }

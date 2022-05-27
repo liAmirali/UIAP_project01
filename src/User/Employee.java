@@ -13,7 +13,6 @@ public class Employee extends User {
         this.personnelID = personnelID;
         this.mandatoryWorkHour = mandatoryWorkHour;
         this.hourlyWage = hourlyWage;
-        this.weeklyAbsenceCount = weeklyAbsenceCount;
     }
 
     public String getPersonnelID() {

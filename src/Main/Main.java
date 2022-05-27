@@ -13,8 +13,10 @@ public class Main {
         DoctorConsole doctorConsole = new DoctorConsole();
         PatientConsole patientConsole = new PatientConsole();
 
+        Admin admin = Admin.getInstance("Admin", "Admin", "A00");
+
         HospitalConsole myConsole = new HospitalConsole(adminConsole, doctorConsole, patientConsole);
-        Hospital.getInstance("UIAP Hospital", myConsole);
+        Hospital.getInstance("UIAP Hospital", myConsole, admin);
         while (true) {
             Hospital.getInstance().getConsole().showLoginRegisterPage();
         }

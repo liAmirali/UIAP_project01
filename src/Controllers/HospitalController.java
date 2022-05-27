@@ -4,32 +4,39 @@ import Main.Hospital;
 import Main.Medicine;
 import Main.Patient;
 import User.Doctor;
+import User.User;
+import User.Watchman;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class HospitalController {
     public static boolean loginAdmin(String username, String password) {
-        return username.equals("Admin") && password.equals("Admin");
-    }
-
-    public static boolean loginDoctor(String username, String password) {
-        for (Doctor doctor : Hospital.getInstance().getDoctors())
-            if (doctor.getPersonnelID().equals(username) && doctor.getPassword().equals(password)) {
-                Hospital.getInstance().setLoggedInDoctor(doctor);
-                return true;
-            }
-
+        if (Hospital.getInstance().getAdmin().getUsername().equals(username) && Hospital.getInstance().getAdmin().getPassword().equals(password)) {
+            return true;
+        }
         return false;
     }
 
-    public static boolean loginPatient(String username, String password) {
-        for (Patient patient : Hospital.getInstance().getPatients())
-            if (patient.getFileNumber().equals(username) && patient.getPassword().equals(password)) {
-                Hospital.getInstance().setLoggedInPatient(patient);
-                return true;
-            }
+    public static boolean loginUser(String username, String password) {
+        ArrayList<User> allUsers = new ArrayList<>();
 
-        return false;
+        allUsers.addAll(Hospital.getInstance().getDoctors());
+        allUsers.addAll(Hospital.getInstance().getPatients());
+        allUsers.addAll(Hospital.getInstance().getWatchmen());
+    }
+
+    public static boolean loginWatchman(String username, String password) {
+        for (Watchman watchman : Hospital.getInstance().getWatchmen()) {
+            if (watchman.getUsername().equals(username) && watchman.getPassword().equals(password)) {
+
+            }
+        }
+    }
+
+    public static void checkoutEmployee(String personnelID) {
+        WatchmanController.recordDeparture(personnelID, Hospital.getInstance().getCurrentTime());
     }
 
     public static Medicine addNewMedicine(String name, double price, String productionDate, String expirationDate) {
@@ -51,5 +58,19 @@ public class HospitalController {
         for (Medicine medicine : Hospital.getInstance().getMedicines())
             if (medicine.getID().equals(IDToCheck)) return true;
         return false;
+    }
+
+    public static Watchman addWatchman(String fullName, String username, String password, String phoneNumber, String email, int mandatoryWorkHour, int hourlyWage) {
+        Random rand = new Random();
+        String personnelID = 'W' + String.valueOf(Math.abs(rand.nextInt()));
+
+        Watchman newWatchman = new Watchman(fullName, username, password, phoneNumber, email, personnelID, mandatoryWorkHour, hourlyWage);
+        Hospital.getInstance().getWatchmen().add(newWatchman);
+
+        return newWatchman;
+    }
+
+    public static void changeDate(LocalDate dateToJumpInto) {
+        Hospital.getInstance().setCurrentTime(dateToJumpInto.atStartOfDay());
     }
 }

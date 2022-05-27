@@ -9,7 +9,7 @@ public class Secretary extends Employee {
     private final ArrayList<Appointment> givenAppointments;
 
     public Secretary(String fullName, String username, String password, String phoneNumber, String email, String personnelID, int mandatoryWorkHour, int hourlyWage, String doctorPersonnelID) {
-        super(fullName, username, password, phoneNumber, email, personnelID, mandatoryWorkHour, hourlyWage);
+        super(fullName, username, password, phoneNumber, email, 'S' + personnelID, mandatoryWorkHour, hourlyWage);
         this.doctorPersonnelID = doctorPersonnelID;
 
         givenAppointments = new ArrayList<>();

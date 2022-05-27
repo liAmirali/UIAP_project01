@@ -65,7 +65,7 @@ public class PatientController {
         return false;
     }
 
-    public static boolean usernameExist(String usernameToCheck) {
+    public static boolean usernameExists(String usernameToCheck) {
         for (Patient patient : Hospital.getInstance().getPatients())
             if (patient.getUsername().equals(usernameToCheck)) return true;
 

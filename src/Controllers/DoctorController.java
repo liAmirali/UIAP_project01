@@ -64,7 +64,7 @@ public class DoctorController {
         throw new DoctorPersonnelIDNotExistsException("No doctor was found with this personnelID");
     }
 
-    public static boolean usernameExist(String usernameToCheck) {
+    public static boolean usernameExists(String usernameToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getUsername().equals(usernameToCheck)) return true;
 

@@ -6,7 +6,7 @@ public class Doctor extends Employee {
     private Secretary secretary;
 
     public Doctor(String fullName, String username, String password, String phoneNumber, String email, String personnelID, int mandatoryWorkHour, int hourlyWage, String major, String biography) {
-        super(fullName, username, password, phoneNumber, email, personnelID, mandatoryWorkHour, hourlyWage);
+        super(fullName, username, password, phoneNumber, email, 'D' + personnelID, mandatoryWorkHour, hourlyWage);
         this.major = major;
         this.biography = biography;
         this.secretary = null;

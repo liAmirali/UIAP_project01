@@ -57,8 +57,10 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         if (menuCode.equals("1")) printAllDoctorAppointments(Hospital.getInstance().getLoggedInDoctor());
         else if (menuCode.equals("2")) printAllMedicines();
         else if (menuCode.equals("3")) visitAPatient();
-        else if (menuCode.equals("4")) shouldKeepRendering = false;
-        else {
+        else if (menuCode.equals("4")) {
+            HospitalController.checkoutEmployee(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
+            shouldKeepRendering = false;
+        } else {
             System.out.println("**** Error: Invalid menu code");
             waitOnEnter();
         }
@@ -189,10 +191,10 @@ public non-sealed class DoctorConsole extends HospitalConsole {
 
         String username;
         while (true) {
-            System.out.println("\nUsername: S");
+            System.out.print("\nUsername: S");
             username = 'S' + input.nextLine();
 
-            if (SecretaryController.usernameExist(username)) {
+            if (SecretaryController.usernameExists(username)) {
                 System.out.println("This username already exists. Try another one.");
                 continue;
             }
@@ -210,9 +212,11 @@ public non-sealed class DoctorConsole extends HospitalConsole {
 
         System.out.println("Mandatory work time (hour): ");
         int mandatoryWorkHour = input.nextInt();
+        input.nextLine();
 
         System.out.println("Hourly wage: ");
         int hourlyWage = input.nextInt();
+        input.nextLine();
 
         Secretary newSecretary = DoctorController.hireSecretary(fullName, username, password, phoneNumber, email, mandatoryWorkHour, hourlyWage, Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
         System.out.println("New secretary was hired successfully! Personnel ID: " + newSecretary.getPersonnelID());

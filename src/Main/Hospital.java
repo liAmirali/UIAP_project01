@@ -2,6 +2,8 @@ package Main;
 
 import Console.HospitalConsole;
 import User.Doctor;
+import User.User;
+import User.Watchman;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,38 +12,44 @@ import java.util.ArrayList;
  * Hospital class is singleton
  */
 public class Hospital {
-    private static Hospital hospitalInstance = null;
+    private static Hospital instance = null;
 
     private final String name;
     private final ArrayList<Doctor> doctors;
     private final ArrayList<Patient> patients;
     private final ArrayList<Medicine> medicines;
+    private final ArrayList<Watchman> watchmen;
 
-    private LocalDateTime currentTime;
+    private HospitalTime hospitalTime;
 
     private Doctor loggedInDoctor;
     private Patient loggedInPatient;
+    private Watchman loggedInWatchman;
+    private Admin admin;
 
     final private HospitalConsole console;
 
-    private Hospital(String name, HospitalConsole hospitalConsole) {
+    private Hospital(String name, HospitalConsole hospitalConsole, Admin admin) {
         this.name = name;
         doctors = new ArrayList<>();
         patients = new ArrayList<>();
         medicines = new ArrayList<>();
-        this.console = hospitalConsole;
+        watchmen = new ArrayList<>();
 
-        currentTime = LocalDateTime.now();
+        this.console = hospitalConsole;
+        this.admin = admin;
+
+        hospitalTime = new HospitalTime();
     }
 
-    public static Hospital getInstance(String name, HospitalConsole hospitalConsole) {
-        if (hospitalInstance == null) hospitalInstance = new Hospital(name, hospitalConsole);
+    public static Hospital getInstance(String name, HospitalConsole hospitalConsole, Admin admin) {
+        if (instance == null) instance = new Hospital(name, hospitalConsole, admin);
 
-        return hospitalInstance;
+        return instance;
     }
 
     public static Hospital getInstance() {
-        return hospitalInstance;
+        return instance;
     }
 
     public String getName() {
@@ -84,7 +92,31 @@ public class Hospital {
         this.loggedInPatient = loggedInPatient;
     }
 
+    public Watchman getLoggedInWatchman() {
+        return loggedInWatchman;
+    }
+
+    public void setLoggedInWatchman(Watchman loggedInWatchman) {
+        this.loggedInWatchman = loggedInWatchman;
+    }
+
     public HospitalConsole getConsole() {
         return console;
+    }
+
+    public ArrayList<Watchman> getWatchmen() {
+        return watchmen;
+    }
+
+    public static void setHospitalInstance(Hospital instance) {
+        Hospital.instance = instance;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 }

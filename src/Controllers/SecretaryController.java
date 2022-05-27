@@ -5,8 +5,11 @@ import Main.Appointment;
 import Main.Hospital;
 import User.Doctor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 
 public class SecretaryController {
     public static boolean appointmentTimeIsFree(String doctorPersonnelID, String startTime) {
@@ -71,13 +74,51 @@ public class SecretaryController {
                 doctor.getSecretary().getGivenAppointments().remove(i);
     }
 
+    public static ArrayList<Appointment> getAppointmentsByDay(String doctorPersonnelID, LocalDate date) {
+        ArrayList<Appointment> selectedAppointments = new ArrayList<>();
+
+        for (Doctor doctor : Hospital.getInstance().getDoctors()) {
+            if (doctor.getPersonnelID().equals(doctorPersonnelID)) {
+                for (Appointment appointment : doctor.getSecretary().getGivenAppointments()) {
+                    LocalDateTime appointmentStartsOn = appointment.getStartDateTime();
+                    if (appointmentStartsOn.getDayOfYear() == date.getDayOfYear() && appointmentStartsOn.getYear() == date.getYear())
+                        selectedAppointments.add(appointment);
+                }
+                break;
+            }
+        }
+
+        return selectedAppointments;
+    }
+
+    public static ArrayList<Appointment> getAppointmentsByWeek(String doctorPersonnelID, LocalDate date) {
+        ArrayList<Appointment> selectedAppointments = new ArrayList<>();
+
+        for (Doctor doctor : Hospital.getInstance().getDoctors()) {
+            if (doctor.getPersonnelID().equals(doctorPersonnelID)) {
+                for (Appointment appointment : doctor.getSecretary().getGivenAppointments()) {
+                    LocalDateTime appointmentStartsOn = appointment.getStartDateTime();
+
+                    if (appointmentStartsOn.get(WeekFields.SUNDAY_START.weekOfYear()) == date.get(WeekFields.SUNDAY_START.weekOfYear())
+                            && appointmentStartsOn.getDayOfYear() >= date.getDayOfYear()
+                            && appointmentStartsOn.getYear() == date.getYear())
+
+                        selectedAppointments.add(appointment);
+                }
+                break;
+            }
+        }
+
+        return selectedAppointments;
+    }
+
     public static boolean secretaryPersonnelIDExists(String personnelIDToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getSecretary().getPersonnelID().equals(personnelIDToCheck)) return true;
         return false;
     }
 
-    public static boolean usernameExist(String usernameToCheck) {
+    public static boolean usernameExists(String usernameToCheck) {
         for (Doctor doctor : Hospital.getInstance().getDoctors())
             if (doctor.getSecretary().getUsername().equals(usernameToCheck)) return true;
 
