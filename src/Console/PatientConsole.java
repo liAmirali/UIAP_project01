@@ -10,23 +10,28 @@ import Main.Patient;
 import Main.Rx;
 import User.Doctor;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public non-sealed class PatientConsole extends HospitalConsole {
-    void showPatientRegistrationPage() {
+    public void showPatientRegistrationPage() {
         Scanner input = new Scanner(System.in);
 
         clearConsole();
 
         System.out.println("#### " + Hospital.getInstance().getName() + " :: Registering as a Patient ####");
+        System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
 
         System.out.print("\nFull name: ");
         String fullName = input.nextLine();
 
         String username;
         while (true) {
-            System.out.print("\nUsername: P");
+            System.out.print("Username: P");
             username = 'P' + input.nextLine();
 
             if (PatientController.usernameExists(username)) {
@@ -36,11 +41,11 @@ public non-sealed class PatientConsole extends HospitalConsole {
             break;
         }
 
-        System.out.print("Email: ");
-        String email = input.nextLine();
-
         System.out.print("Password: ");
         String password = input.nextLine();
+
+        System.out.print("Email: ");
+        String email = input.nextLine();
 
         System.out.print("Phone number: ");
         String phoneNumber = input.nextLine();
@@ -54,22 +59,23 @@ public non-sealed class PatientConsole extends HospitalConsole {
         waitOnEnter();
     }
 
-    void showPatientLoginPage() {
+    public void showPatientLoginPage() {
         Scanner input = new Scanner(System.in);
 
         clearConsole();
 
-        System.out.println("#### " + Hospital.getInstance().getName() + " :: Logging in as a patient ####");
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Logging in as a Patient ####");
+        System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
 
-        System.out.print("\nFile number: ");
-        String fileNumber = input.nextLine();
+        System.out.print("\nUsername: ");
+        String username = input.nextLine();
 
         System.out.print("Password: ");
         String password = input.nextLine();
 
         shouldKeepRendering = true;
 
-        if (HospitalController.loginPatient(fileNumber, password)) {
+        if (HospitalController.loginUser(username, password)) {
             System.out.println("Logged in successfully!");
             waitOnEnter();
             while (shouldKeepRendering) showPatientPanel();
@@ -79,12 +85,13 @@ public non-sealed class PatientConsole extends HospitalConsole {
         }
     }
 
-    void showPatientPanel() {
+    public void showPatientPanel() {
         Scanner input = new Scanner(System.in);
 
         clearConsole();
 
         System.out.println("#### " + Hospital.getInstance().getName() + " :: Patient Panel ####");
+        System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
 
         System.out.println("(1) Make an appointment");
         System.out.println("(2) Edit info");
@@ -94,28 +101,30 @@ public non-sealed class PatientConsole extends HospitalConsole {
         System.out.println("(6) Print all prescriptions");
         System.out.println("(7) Logout");
 
-        System.out.println("\nEnter menu code: ");
+        System.out.print("\nEnter menu code: ");
         String menuCode = input.nextLine();
 
-        if (menuCode.equals("1")) showMakingAnAppointmentPage();
-        else if (menuCode.equals("2")) showPatientProfileEdit();
-        else if (menuCode.equals("3")) Hospital.getInstance().getConsole().doctorConsole.printAllDoctors();
-        else if (menuCode.equals("4")) showFilterDoctorPage();
-        else if (menuCode.equals("5")) printAllPatientAppointments(Hospital.getInstance().getLoggedInPatient());
-        else if (menuCode.equals("6")) printAllPatientPrescriptions(Hospital.getInstance().getLoggedInPatient());
-        else if (menuCode.equals("7")) shouldKeepRendering = false;
-        else {
-            System.out.println("*** Invalid menu code. ***");
-            waitOnEnter();
+        switch (menuCode) {
+            case "1" -> showMakingAnAppointmentPage();
+            case "2" -> showPatientProfileEdit();
+            case "3" -> Hospital.getInstance().getConsole().doctorConsole.printAllDoctors();
+            case "4" -> showFilterDoctorPage();
+            case "5" -> printAllPatientAppointments(Hospital.getInstance().getLoggedInPatient());
+            case "6" -> printAllPatientPrescriptions(Hospital.getInstance().getLoggedInPatient());
+            case "7" -> shouldKeepRendering = false;
+            default -> {
+                System.out.println("*** Invalid menu code. ***");
+                waitOnEnter();
+            }
         }
     }
 
-    void showPatientProfileEdit() {
+    public void showPatientProfileEdit() {
         Scanner input = new Scanner(System.in);
 
         clearConsole();
 
-        System.out.println("### Editing profile ###\n");
+        System.out.println("#### Editing Profile ####\n");
 
         System.out.println("Enter your new full name (leave empty to keep the old data): ");
         String newFullName = input.nextLine();
@@ -136,10 +145,10 @@ public non-sealed class PatientConsole extends HospitalConsole {
         waitOnEnter();
     }
 
-    void showFilterDoctorPage() {
+    public void showFilterDoctorPage() {
         Scanner input = new Scanner(System.in);
 
-        waitOnEnter();
+        clearConsole();
 
         System.out.println("*** Enter the major to filter doctors:");
         String filteringMajor = input.nextLine();
@@ -153,21 +162,24 @@ public non-sealed class PatientConsole extends HospitalConsole {
         waitOnEnter();
     }
 
-    void showMakingAnAppointmentPage() {
+    public void showMakingAnAppointmentPage() {
         Scanner input = new Scanner(System.in);
 
         clearConsole();
 
-        System.out.println(Hospital.getInstance().getName() + " :: Making a new appointment ####");
+        System.out.println(Hospital.getInstance().getName() + " :: Making a New Appointment ####");
+        System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
 
         String personnelID;
         Doctor selectedDoctor = null;
         boolean doctorFound = false;
-        while (!doctorFound) {
+        boolean doctorHasSecretary = false;
+        while (!doctorFound || !doctorHasSecretary) {
             System.out.println("Enter the doctor personnel ID: ");
             personnelID = input.nextLine();
             for (Doctor doctor : Hospital.getInstance().getDoctors()) {
                 if (doctor.getPersonnelID().equals(personnelID)) {
+                    if (doctor.getSecretary() != null) doctorHasSecretary = true;
                     selectedDoctor = doctor;
                     doctorFound = true;
                     break;
@@ -176,20 +188,35 @@ public non-sealed class PatientConsole extends HospitalConsole {
             if (!doctorFound) {
                 System.out.println("No doctor found with this personnel ID.");
                 waitOnEnter();
+                continue;
+            }
+            if (!doctorHasSecretary) {
+                System.out.println("This doctor doesn't have a secretary.");
+                waitOnEnter();
             }
         }
 
         String visitTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTimeDT;
         while (true) {
-            System.out.println("Enter the time you want to be visited (yyyy-MM-dd HH:mm:ss): ");
-            visitTime = input.nextLine();
+            try {
+                System.out.println("Enter the time you want to be visited (yyyy-MM-dd HH:mm:ss): ");
+                visitTime = input.nextLine();
+                startTimeDT = LocalDateTime.parse(visitTime, formatter);
 
-            if (!SecretaryController.appointmentTimeIsFree(selectedDoctor.getPersonnelID(), visitTime)) {
-                System.out.println("Sorry! This time is already taken or the time has passed.");
-                waitOnEnter();
-                continue;
+                if (!SecretaryController.appointmentTimeIsFree(selectedDoctor.getPersonnelID(), visitTime)) {
+                    System.out.println("Sorry! This time is already taken or the time has passed.");
+                    System.out.println("Also there maybe more than 10 appointments in this week.");
+                    waitOnEnter();
+                    continue;
+                }
+
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("You probably didn't enter time format correctly.");
+
             }
-            break;
         }
 
         String isEmergencyResponse;
@@ -207,12 +234,12 @@ public non-sealed class PatientConsole extends HospitalConsole {
             } else System.out.println("Enter either \"y\" or \"n\".");
         }
 
-        Appointment fixedAppointment = SecretaryController.fixAnAppointment(Hospital.getInstance().getLoggedInPatient().getFileNumber(), visitTime, selectedDoctor.getPersonnelID(), isEmergency);
+        Appointment fixedAppointment = SecretaryController.fixAnAppointment(Hospital.getInstance().getLoggedInPatient().getFileNumber(), startTimeDT, selectedDoctor.getPersonnelID(), isEmergency);
         System.out.println("Your appointment has been fixed! Number:" + fixedAppointment.getNumber());
         waitOnEnter();
     }
 
-    void printAllPatientAppointments(Patient patient) {
+    public void printAllPatientAppointments(Patient patient) {
         clearConsole();
 
         System.out.println("Here is all your appointments:");
@@ -223,7 +250,7 @@ public non-sealed class PatientConsole extends HospitalConsole {
         waitOnEnter();
     }
 
-    void printAllPatientPrescriptions(Patient patient) {
+    public void printAllPatientPrescriptions(Patient patient) {
         clearConsole();
 
         System.out.println("Here is all you prescriptions:");

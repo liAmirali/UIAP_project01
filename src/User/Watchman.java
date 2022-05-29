@@ -7,21 +7,30 @@ import java.util.ArrayList;
 
 public class Watchman extends Employee {
     private static final ArrayList<ArrivalRecord> arrivalRecords = new ArrayList<>();
-    private LocalDateTime tempCheckInTime;
+    private static LocalDateTime tempEmployeeCheckInTime;
+    private static LocalDateTime tempWatchmanCheckInTime; // Because a watchman can simultaneously log in with another employee
 
     public Watchman(String fullName, String username, String password, String phoneNumber, String email, String personnelID, int mandatoryWorkHour, int hourlyWage) {
         super(fullName, username, password, phoneNumber, email, personnelID, mandatoryWorkHour, hourlyWage);
     }
 
-    public ArrayList<ArrivalRecord> getArrivalRecords() {
+    public static ArrayList<ArrivalRecord> getArrivalRecords() {
         return arrivalRecords;
     }
 
-    public LocalDateTime getTempCheckInTime() {
-        return tempCheckInTime;
+    public LocalDateTime getTempEmployeeCheckInTime() {
+        return tempEmployeeCheckInTime;
     }
 
-    public void setTempCheckInTime(LocalDateTime tempCheckInTime) {
-        this.tempCheckInTime = tempCheckInTime;
+    public void setTempEmployeeCheckInTime(LocalDateTime tempEmployeeCheckInTime) {
+        this.tempEmployeeCheckInTime = tempEmployeeCheckInTime;
+    }
+
+    public LocalDateTime getTempWatchmanCheckInTime() {
+        return tempWatchmanCheckInTime;
+    }
+
+    public void setTempWatchmanCheckInTime(LocalDateTime tempWatchmanCheckInTime) {
+        this.tempWatchmanCheckInTime = tempWatchmanCheckInTime;
     }
 }

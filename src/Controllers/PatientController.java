@@ -54,7 +54,7 @@ public class PatientController {
             break;
         }
 
-        Patient newPatient = new Patient(fullName, username, email, password, phoneNumber, fileNumber, descriptionOfProblem);
+        Patient newPatient = new Patient(fullName, username, password, phoneNumber, email, fileNumber, descriptionOfProblem);
         Hospital.getInstance().getPatients().add(newPatient);
         return newPatient;
     }

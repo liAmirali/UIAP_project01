@@ -8,8 +8,9 @@ public class HospitalTime {
     private LocalDateTime timeOriginSetTime;
 
     public HospitalTime() {
-        timeOrigin = LocalDateTime.now();
-        timeOriginSetTime = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        timeOrigin = now;
+        timeOriginSetTime = now;
     }
 
     public HospitalTime(LocalDateTime timeOrigin) {
@@ -17,16 +18,8 @@ public class HospitalTime {
         timeOriginSetTime = LocalDateTime.now();
     }
 
-    public LocalDateTime getTimeOrigin() {
-        return timeOrigin;
-    }
-
     public void setTimeOrigin(LocalDateTime timeOrigin) {
         this.timeOrigin = timeOrigin;
-    }
-
-    public LocalDateTime getTimeOriginSetTime() {
-        return timeOriginSetTime;
     }
 
     public void setTimeOriginSetTime(LocalDateTime timeOriginSetTime) {
@@ -34,10 +27,10 @@ public class HospitalTime {
     }
 
     private Duration getForwardedDuration() {
-        return Duration.between(timeOrigin, timeOriginSetTime);
+        return Duration.between(timeOriginSetTime, timeOrigin);
     }
 
-    public LocalDateTime getHospitalTime() {
+    public LocalDateTime getTime() {
         LocalDateTime nowNow = LocalDateTime.now();
 
         if (timeOrigin.isAfter(timeOriginSetTime))

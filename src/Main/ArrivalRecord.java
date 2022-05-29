@@ -1,5 +1,6 @@
 package Main;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class ArrivalRecord {
@@ -23,5 +24,16 @@ public class ArrivalRecord {
 
     public String getUserPersonnelID() {
         return userPersonnelID;
+    }
+
+    public Duration getWorkingTime() {
+        return Duration.between(arrivalTime, exitTime);
+    }
+
+    @Override
+    public String toString() {
+        return "PersonnelID: " + this.getUserPersonnelID() + '\n'
+                + "Arrived at:  " + this.getArrivalTime() + '\n'
+                + "Exited at:   " + this.getExitTime();
     }
 }

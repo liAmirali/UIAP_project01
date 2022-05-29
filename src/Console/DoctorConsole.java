@@ -1,9 +1,6 @@
 package Console;
 
-import Controllers.DoctorController;
-import Controllers.HospitalController;
-import Controllers.PatientController;
-import Controllers.SecretaryController;
+import Controllers.*;
 import Main.*;
 import User.Doctor;
 import User.Secretary;
@@ -14,33 +11,14 @@ import java.util.Random;
 import java.util.Scanner;
 
 public non-sealed class DoctorConsole extends HospitalConsole {
-    void showDoctorLoginPage() {
-        Scanner input = new Scanner(System.in);
-        shouldKeepRendering = true;
-
-        clearConsole();
-
-        System.out.println("#### " + Hospital.getInstance().getName() + " :: Login as a Doctor ####");
-
-        System.out.print("\nPersonnel ID: ");
-        String username = input.nextLine();
-
-        System.out.print("Password: ");
-        String password = input.nextLine();
-
-        if (HospitalController.loginDoctor(username, password)) while (shouldKeepRendering) showDoctorPanel();
-        else {
-            System.out.println("Username or password is incorrect!");
-            waitOnEnter();
-        }
-    }
-
-    void showDoctorPanel() {
+    public void showDoctorPanel() {
         Scanner input = new Scanner(System.in);
 
         clearConsole();
 
         System.out.println("#### " + Hospital.getInstance().getName() + " :: Doctor Panel ####");
+        System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
+
         if (Hospital.getInstance().getLoggedInDoctor().getSecretary() == null) {
             System.out.println("*** You have to hire a secretary!");
             waitOnEnter();
@@ -50,23 +28,34 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         System.out.println("\n(1) Print all appointments");
         System.out.println("(2) Print all medicines");
         System.out.println("(3) Visit a patient");
-        System.out.println("(4) Logout");
+        System.out.println("(4) Get month salary until now");
+        System.out.println("(5) See worked days");
+        System.out.println("(6) Logout");
 
         System.out.print("\nEnter menu code: ");
         String menuCode = input.nextLine();
-        if (menuCode.equals("1")) printAllDoctorAppointments(Hospital.getInstance().getLoggedInDoctor());
-        else if (menuCode.equals("2")) printAllMedicines();
-        else if (menuCode.equals("3")) visitAPatient();
-        else if (menuCode.equals("4")) {
-            HospitalController.checkoutEmployee(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
-            shouldKeepRendering = false;
-        } else {
-            System.out.println("**** Error: Invalid menu code");
-            waitOnEnter();
+        switch (menuCode) {
+            case "1" -> printAllDoctorAppointments(Hospital.getInstance().getLoggedInDoctor());
+            case "2" -> printAllMedicines();
+            case "3" -> visitAPatient();
+            case "4" -> {
+                System.out.print("Your salary for this month until today: ");
+                System.out.println(EmployeeController.getMonthSalary(Hospital.getInstance().getLoggedInDoctor().getPersonnelID()));
+                waitOnEnter();
+            }
+            case "5" -> printWorkedDays(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
+            case "6" -> {
+                HospitalController.logoutEmployee(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
+                shouldKeepRendering = false;
+            }
+            default -> {
+                System.out.println("**** Error: Invalid menu code");
+                waitOnEnter();
+            }
         }
     }
 
-    void printAllDoctorAppointments(Doctor doctor) {
+    public void printAllDoctorAppointments(Doctor doctor) {
         clearConsole();
 
         System.out.println("Here is all the appointments:");
@@ -74,10 +63,10 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         for (Appointment appointment : doctor.getSecretary().getGivenAppointments())
             System.out.println(appointment.toString());
 
-        clearConsole();
+        waitOnEnter();
     }
 
-    void printAllMedicines() {
+    public void printAllMedicines() {
         clearConsole();
 
         ArrayList<Medicine> allMedicines = Hospital.getInstance().getMedicines();
@@ -89,8 +78,8 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         waitOnEnter();
     }
 
-    void visitAPatient() {
-        LocalDateTime nowDT = LocalDateTime.now();
+    public void visitAPatient() {
+        LocalDateTime nowDT = Hospital.getInstance().getHospitalTime().getTime();
         boolean examined = false;
 
         clearConsole();
@@ -168,7 +157,7 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         }
     }
 
-    void printAllDoctors() {
+    public void printAllDoctors() {
         clearConsole();
 
         ArrayList<Doctor> allDoctors = Hospital.getInstance().getDoctors();
@@ -179,19 +168,20 @@ public non-sealed class DoctorConsole extends HospitalConsole {
         waitOnEnter();
     }
 
-    void showAddSecretaryPage() {
+    public void showAddSecretaryPage() {
         clearConsole();
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("#### " + Hospital.getInstance().getName() + " :: Adding a secretary ####");
+        System.out.println("#### " + Hospital.getInstance().getName() + " :: Adding a Secretary ####");
+        System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
 
         System.out.print("\nFull name: ");
         String fullName = input.nextLine();
 
         String username;
         while (true) {
-            System.out.print("\nUsername: S");
+            System.out.print("Username: S");
             username = 'S' + input.nextLine();
 
             if (SecretaryController.usernameExists(username)) {
@@ -201,26 +191,25 @@ public non-sealed class DoctorConsole extends HospitalConsole {
             break;
         }
 
-        System.out.print("Email: ");
-        String email = input.nextLine();
-
         System.out.print("Password: ");
         String password = input.nextLine();
 
-        System.out.println("Phone Number:");
+        System.out.print("Phone Number:");
         String phoneNumber = input.nextLine();
 
-        System.out.println("Mandatory work time (hour): ");
+        System.out.print("Email: ");
+        String email = input.nextLine();
+
+        System.out.print("Mandatory work time (hour per day): ");
         int mandatoryWorkHour = input.nextInt();
         input.nextLine();
 
-        System.out.println("Hourly wage: ");
+        System.out.print("Hourly wage: ");
         int hourlyWage = input.nextInt();
         input.nextLine();
 
         Secretary newSecretary = DoctorController.hireSecretary(fullName, username, password, phoneNumber, email, mandatoryWorkHour, hourlyWage, Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
         System.out.println("New secretary was hired successfully! Personnel ID: " + newSecretary.getPersonnelID());
-        System.out.println();
 
         waitOnEnter();
     }

@@ -37,4 +37,12 @@ public class Patient extends User {
     public void setDescriptionOfProblem(String descriptionOfProblem) {
         this.descriptionOfProblem = descriptionOfProblem;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "fileNumber='" + fileNumber + '\'' +
+                ", prescriptions=" + prescriptions +
+                ", appointments=" + appointments +
+                ", descriptionOfProblem='" + descriptionOfProblem + '\'';
+    }
 }

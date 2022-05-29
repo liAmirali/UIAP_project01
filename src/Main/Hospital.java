@@ -1,11 +1,8 @@
 package Main;
 
 import Console.HospitalConsole;
-import User.Doctor;
-import User.User;
-import User.Watchman;
+import User.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -15,26 +12,35 @@ public class Hospital {
     private static Hospital instance = null;
 
     private final String name;
+
+    // Users
     private final ArrayList<Doctor> doctors;
     private final ArrayList<Patient> patients;
-    private final ArrayList<Medicine> medicines;
     private final ArrayList<Watchman> watchmen;
+    private final ArrayList<Janitor> janitors;
 
-    private HospitalTime hospitalTime;
+    private final ArrayList<Medicine> medicines;
 
-    private Doctor loggedInDoctor;
+    private final HospitalTime hospitalTime;
+
     private Patient loggedInPatient;
+    private Doctor loggedInDoctor;
+    private Secretary loggedInSecretary;
     private Watchman loggedInWatchman;
+    private Janitor loggedInJanitor;
     private Admin admin;
 
     final private HospitalConsole console;
 
     private Hospital(String name, HospitalConsole hospitalConsole, Admin admin) {
         this.name = name;
+
         doctors = new ArrayList<>();
         patients = new ArrayList<>();
-        medicines = new ArrayList<>();
         watchmen = new ArrayList<>();
+        janitors = new ArrayList<>();
+
+        medicines = new ArrayList<>();
 
         this.console = hospitalConsole;
         this.admin = admin;
@@ -68,12 +74,8 @@ public class Hospital {
         return medicines;
     }
 
-    public LocalDateTime getCurrentTime() {
-        return currentTime;
-    }
-
-    public void setCurrentTime(LocalDateTime currentTime) {
-        this.currentTime = currentTime;
+    public HospitalTime getHospitalTime() {
+        return hospitalTime;
     }
 
     public Doctor getLoggedInDoctor() {
@@ -100,6 +102,22 @@ public class Hospital {
         this.loggedInWatchman = loggedInWatchman;
     }
 
+    public Janitor getLoggedInJanitor() {
+        return loggedInJanitor;
+    }
+
+    public void setLoggedInJanitor(Janitor loggedInJanitor) {
+        this.loggedInJanitor = loggedInJanitor;
+    }
+
+    public Secretary getLoggedInSecretary() {
+        return loggedInSecretary;
+    }
+
+    public void setLoggedInSecretary(Secretary loggedInSecretary) {
+        this.loggedInSecretary = loggedInSecretary;
+    }
+
     public HospitalConsole getConsole() {
         return console;
     }
@@ -108,8 +126,8 @@ public class Hospital {
         return watchmen;
     }
 
-    public static void setHospitalInstance(Hospital instance) {
-        Hospital.instance = instance;
+    public ArrayList<Janitor> getJanitors() {
+        return janitors;
     }
 
     public Admin getAdmin() {
@@ -118,5 +136,30 @@ public class Hospital {
 
     public void setAdmin(Admin admin) {
         this.admin = admin;
+    }
+
+    public ArrayList<Employee> getAllEmployees() {
+        ArrayList<Employee> allEmployees = new ArrayList<>();
+
+        allEmployees.addAll(Hospital.getInstance().getDoctors());
+        allEmployees.addAll(Hospital.getInstance().getWatchmen());
+        allEmployees.addAll(Hospital.getInstance().getJanitors());
+        for (Doctor doctor : Hospital.getInstance().getDoctors())
+            allEmployees.add(doctor.getSecretary());
+
+        return allEmployees;
+    }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> allUsers = new ArrayList<>();
+
+        allUsers.addAll(Hospital.getInstance().getDoctors());
+        allUsers.addAll(Hospital.getInstance().getPatients());
+        allUsers.addAll(Hospital.getInstance().getWatchmen());
+        allUsers.addAll(Hospital.getInstance().getJanitors());
+        for (Doctor doctor : Hospital.getInstance().getDoctors())
+            allUsers.add(doctor.getSecretary());
+
+        return allUsers;
     }
 }

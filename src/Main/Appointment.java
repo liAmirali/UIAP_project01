@@ -2,12 +2,12 @@ package Main;
 
 import java.time.LocalDateTime;
 
-public class Appointment {
-    final private int number;
-    final private LocalDateTime startDateTime;
-    final private LocalDateTime endDateTime;
-    final private String patientFileNumber;
-    final private String doctorPersonnelID;
+public class Appointment implements Comparable<Appointment> {
+    private final int number;
+    private final LocalDateTime startDateTime;
+    private final LocalDateTime endDateTime;
+    private final String patientFileNumber;
+    private final String doctorPersonnelID;
     private final boolean isEmergency;
 
     public Appointment(int number, LocalDateTime startDateTime, LocalDateTime endDateTime, String patientFileNumber,
@@ -24,16 +24,6 @@ public class Appointment {
         return number;
     }
 
-    @Override
-    public String toString() {
-        return "number=" + number +
-                ", startDateTime=" + startDateTime +
-                ", endDateTime=" + endDateTime +
-                ", patientFileNumber='" + patientFileNumber + '\'' +
-                ", doctorPersonnelID='" + doctorPersonnelID + '\'' +
-                ", isEmergency=" + isEmergency;
-    }
-
     public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
@@ -48,5 +38,30 @@ public class Appointment {
 
     public String getDoctorPersonnelID() {
         return doctorPersonnelID;
+    }
+
+    public boolean isEmergency() {
+        return isEmergency;
+    }
+
+    @Override
+    public String toString() {
+        return "number=" + number +
+                ", startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
+                ", patientFileNumber='" + patientFileNumber + '\'' +
+                ", doctorPersonnelID='" + doctorPersonnelID + '\'' +
+                ", isEmergency=" + isEmergency;
+    }
+
+    @Override
+    public int compareTo(Appointment appointment) {
+        if (this.isEmergency() && !appointment.isEmergency())
+            return 1;
+        else if (!this.isEmergency() && appointment.isEmergency())
+            return -1;
+        else
+            return this.getNumber() - appointment.getNumber();
+
     }
 }

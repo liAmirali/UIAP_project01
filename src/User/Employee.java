@@ -1,5 +1,8 @@
 package User;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 public class Employee extends User {
     private String personnelID;
     private int workHourPerMonth;
@@ -7,12 +10,15 @@ public class Employee extends User {
     private int mandatoryWorkHour;
     private int hourlyWage;
     private int weeklyAbsenceCount;
+    private final ArrayList<LocalDate> workedDays;
 
     public Employee(String fullName, String username, String password, String phoneNumber, String email, String personnelID, int mandatoryWorkHour, int hourlyWage) {
         super(fullName, username, password, phoneNumber, email);
         this.personnelID = personnelID;
         this.mandatoryWorkHour = mandatoryWorkHour;
         this.hourlyWage = hourlyWage;
+
+        workedDays = new ArrayList<>();
     }
 
     public String getPersonnelID() {
@@ -61,5 +67,9 @@ public class Employee extends User {
 
     public void setWeeklyAbsenceCount(int weeklyAbsenceCount) {
         this.weeklyAbsenceCount = weeklyAbsenceCount;
+    }
+
+    public ArrayList<LocalDate> getWorkedDays() {
+        return workedDays;
     }
 }
