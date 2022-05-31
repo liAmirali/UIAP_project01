@@ -33,7 +33,7 @@ non-sealed public class WatchmanConsole extends HospitalConsole {
                 waitOnEnter();
             }
             default -> {
-                System.out.println("Invalid menu code. Try again.");
+                System.out.println("Invalid menu code.");
                 waitOnEnter();
             }
         }

@@ -57,7 +57,7 @@ public class Main {
     }
 }
 
-non-sealed class AdminConsole extends HospitalConsole {
+class AdminConsole extends HospitalConsole {
     public void showAdminLoginPage() {
         Scanner input = new Scanner(System.in);
 
@@ -384,7 +384,7 @@ non-sealed class AdminConsole extends HospitalConsole {
 }
 
 
-non-sealed class DoctorConsole extends HospitalConsole {
+class DoctorConsole extends HospitalConsole {
     public void showDoctorPanel() {
         Scanner input = new Scanner(System.in);
 
@@ -409,23 +409,30 @@ non-sealed class DoctorConsole extends HospitalConsole {
         System.out.print("\nEnter menu code: ");
         String menuCode = input.nextLine();
         switch (menuCode) {
-            case "1" -> printAllDoctorAppointments(Hospital.getInstance().getLoggedInDoctor());
-            case "2" -> printAllMedicines();
-            case "3" -> visitAPatient();
-            case "4" -> {
+            case "1":
+                printAllDoctorAppointments(Hospital.getInstance().getLoggedInDoctor());
+                break;
+            case "2":
+                printAllMedicines();
+                break;
+            case "3":
+                visitAPatient();
+                break;
+            case "4":
                 System.out.print("Your salary for this month until today: ");
                 System.out.println(EmployeeController.getMonthSalary(Hospital.getInstance().getLoggedInDoctor().getPersonnelID()));
                 waitOnEnter();
-            }
-            case "5" -> printWorkedDays(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
-            case "6" -> {
+                break;
+            case "5":
+                printWorkedDays(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
+                break;
+            case "6":
                 HospitalController.logoutEmployee(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
                 shouldKeepRendering = false;
-            }
-            default -> {
+                break;
+            default:
                 System.out.println("**** Error: Invalid menu code");
                 waitOnEnter();
-            }
         }
     }
 
@@ -590,7 +597,7 @@ non-sealed class DoctorConsole extends HospitalConsole {
 }
 
 
-sealed class HospitalConsole permits AdminConsole, DoctorConsole, WatchmanConsole, JanitorConsole, SecretaryConsole, PatientConsole {
+class HospitalConsole {
     boolean shouldKeepRendering;
 
     AdminConsole adminConsole;
@@ -659,18 +666,30 @@ sealed class HospitalConsole permits AdminConsole, DoctorConsole, WatchmanConsol
         System.out.print("\nEnter menu code: ");
         String menuCode = input.nextLine();
         switch (menuCode) {
-            case "1" -> adminConsole.showAdminLoginPage();
-            case "2" -> showEmployeeLoginPage();
-            case "3" -> patientConsole.showPatientLoginPage();
-            case "4" -> patientConsole.showPatientRegistrationPage();
-            case "5" ->
-                    HospitalController.logoutWatchman(Hospital.getInstance().getLoggedInWatchman().getPersonnelID());
-            case "6" -> watchmanConsole.showWatchmanPanel();
-            case "7" -> System.exit(0);
-            default -> {
+            case "1":
+                adminConsole.showAdminLoginPage();
+                break;
+            case "2":
+                showEmployeeLoginPage();
+                break;
+            case "3":
+                patientConsole.showPatientLoginPage();
+                break;
+            case "4":
+                patientConsole.showPatientRegistrationPage();
+                break;
+            case "5":
+                HospitalController.logoutWatchman(Hospital.getInstance().getLoggedInWatchman().getPersonnelID());
+                break;
+            case "6":
+                watchmanConsole.showWatchmanPanel();
+                break;
+            case "7":
+                System.exit(0);
+                break;
+            default:
                 System.out.println("**** Error: Invalid menu code");
                 waitOnEnter();
-            }
         }
     }
 
@@ -741,7 +760,7 @@ sealed class HospitalConsole permits AdminConsole, DoctorConsole, WatchmanConsol
 }
 
 
-non-sealed class JanitorConsole extends HospitalConsole {
+class JanitorConsole extends HospitalConsole {
     public void showJanitorPanel() {
         clearConsole();
 
@@ -760,22 +779,27 @@ non-sealed class JanitorConsole extends HospitalConsole {
         String menuCode = input.nextLine();
 
         switch (menuCode) {
-            case "1" -> showReportABreakDownPage();
-            case "2" -> printReportedBreakdowns();
-            case "3" -> {
+            case "1":
+                showReportABreakDownPage();
+                break;
+            case "2":
+                printReportedBreakdowns();
+                break;
+            case "3":
                 System.out.print("Your salary for this month until today: ");
                 System.out.println(EmployeeController.getMonthSalary(Hospital.getInstance().getLoggedInJanitor().getPersonnelID()));
                 waitOnEnter();
-            }
-            case "4" -> printWorkedDays(Hospital.getInstance().getLoggedInJanitor().getPersonnelID());
-            case "5" -> {
+                break;
+            case "4":
+                printWorkedDays(Hospital.getInstance().getLoggedInJanitor().getPersonnelID());
+                break;
+            case "5":
                 HospitalController.logoutEmployee(Hospital.getInstance().getLoggedInJanitor().getPersonnelID());
                 shouldKeepRendering = false;
-            }
-            default -> {
+                break;
+            default:
                 System.out.println("Invalid menu code. Try again.");
                 waitOnEnter();
-            }
         }
     }
 
@@ -817,7 +841,7 @@ non-sealed class JanitorConsole extends HospitalConsole {
 }
 
 
-non-sealed class PatientConsole extends HospitalConsole {
+class PatientConsole extends HospitalConsole {
     public void showPatientRegistrationPage() {
         Scanner input = new Scanner(System.in);
 
@@ -905,17 +929,30 @@ non-sealed class PatientConsole extends HospitalConsole {
         String menuCode = input.nextLine();
 
         switch (menuCode) {
-            case "1" -> showMakingAnAppointmentPage();
-            case "2" -> showPatientProfileEdit();
-            case "3" -> Hospital.getInstance().getConsole().doctorConsole.printAllDoctors();
-            case "4" -> showFilterDoctorPage();
-            case "5" -> printAllPatientAppointments(Hospital.getInstance().getLoggedInPatient());
-            case "6" -> printAllPatientPrescriptions(Hospital.getInstance().getLoggedInPatient());
-            case "7" -> shouldKeepRendering = false;
-            default -> {
+            case "1":
+                showMakingAnAppointmentPage();
+                break;
+            case "2":
+                showPatientProfileEdit();
+                break;
+            case "3":
+                Hospital.getInstance().getConsole().doctorConsole.printAllDoctors();
+                break;
+            case "4":
+                showFilterDoctorPage();
+                break;
+            case "5":
+                printAllPatientAppointments(Hospital.getInstance().getLoggedInPatient());
+                break;
+            case "6":
+                printAllPatientPrescriptions(Hospital.getInstance().getLoggedInPatient());
+                break;
+            case "7":
+                shouldKeepRendering = false;
+                break;
+            default:
                 System.out.println("*** Invalid menu code. ***");
                 waitOnEnter();
-            }
         }
     }
 
@@ -1063,7 +1100,7 @@ non-sealed class PatientConsole extends HospitalConsole {
 }
 
 
-non-sealed class SecretaryConsole extends HospitalConsole {
+class SecretaryConsole extends HospitalConsole {
     public void showSecretaryPanel() {
         clearConsole();
 
@@ -1083,24 +1120,31 @@ non-sealed class SecretaryConsole extends HospitalConsole {
         String menuCode = input.nextLine();
 
         switch (menuCode) {
-            case "1" -> printSortedAppointments();
-            case "2" -> printAppointmentsByDay();
-            case "3" -> printAppointmentsByWeek();
-            case "4" -> {
+            case "1":
+                printSortedAppointments();
+                break;
+            case "2":
+                printAppointmentsByDay();
+                break;
+            case "3":
+                printAppointmentsByWeek();
+                break;
+            case "4":
                 System.out.print("Your salary for this month until today: ");
                 System.out.println(EmployeeController.getMonthSalary(Hospital.getInstance().getLoggedInSecretary().getPersonnelID()));
                 waitOnEnter();
-            }
-            case "5" -> printWorkedDays(Hospital.getInstance().getLoggedInSecretary().getPersonnelID());
-            case "6" -> {
+                break;
+            case "5":
+                printWorkedDays(Hospital.getInstance().getLoggedInSecretary().getPersonnelID());
+                break;
+            case "6":
                 HospitalController.logoutEmployee(Hospital.getInstance().getLoggedInSecretary().getPersonnelID());
                 shouldKeepRendering = false;
-            }
-            default -> {
+                break;
+            default:
                 System.out.println("Invalid menu code. Try again.");
 
                 waitOnEnter();
-            }
         }
     }
 
@@ -1148,7 +1192,7 @@ non-sealed class SecretaryConsole extends HospitalConsole {
 }
 
 
-non-sealed class WatchmanConsole extends HospitalConsole {
+class WatchmanConsole extends HospitalConsole {
     public void showWatchmanPanel() {
         clearConsole();
 
@@ -1165,17 +1209,20 @@ non-sealed class WatchmanConsole extends HospitalConsole {
         String menuCode = input.nextLine();
 
         switch (menuCode) {
-            case "1" -> printTodayArrivalRecords();
-            case "2" -> printWorkedDays(Hospital.getInstance().getLoggedInWatchman().getPersonnelID());
-            case "3" -> {
+            case "1":
+                printTodayArrivalRecords();
+                break;
+            case "2":
+                printWorkedDays(Hospital.getInstance().getLoggedInWatchman().getPersonnelID());
+                break;
+            case "3":
                 System.out.print("Your salary for this month until today: ");
                 System.out.println(EmployeeController.getMonthSalary(Hospital.getInstance().getLoggedInWatchman().getPersonnelID()));
                 waitOnEnter();
-            }
-            default -> {
+                break;
+            default:
                 System.out.println("Invalid menu code. Try again.");
                 waitOnEnter();
-            }
         }
     }
 

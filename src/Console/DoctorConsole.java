@@ -45,8 +45,8 @@ public non-sealed class DoctorConsole extends HospitalConsole {
             }
             case "5" -> printWorkedDays(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
             case "6" -> {
-                HospitalController.logoutEmployee(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
                 shouldKeepRendering = false;
+                HospitalController.logoutEmployee(Hospital.getInstance().getLoggedInDoctor().getPersonnelID());
             }
             default -> {
                 System.out.println("**** Error: Invalid menu code");

@@ -8,7 +8,7 @@ import Main.Hospital;
 import java.util.Scanner;
 
 sealed public class HospitalConsole permits AdminConsole, DoctorConsole, WatchmanConsole, JanitorConsole, SecretaryConsole, PatientConsole {
-    boolean shouldKeepRendering;
+    static boolean shouldKeepRendering;
 
     AdminConsole adminConsole;
     DoctorConsole doctorConsole;
@@ -62,6 +62,8 @@ sealed public class HospitalConsole permits AdminConsole, DoctorConsole, Watchma
         clearConsole();
 
         Scanner input = new Scanner(System.in);
+        shouldKeepRendering = true;
+
         System.out.println("#### Welcome to " + Hospital.getInstance().getName() + " ####");
         System.out.println("Time: " + Hospital.getInstance().getHospitalTime().getTime());
 
@@ -106,12 +108,13 @@ sealed public class HospitalConsole permits AdminConsole, DoctorConsole, Watchma
         String password = input.nextLine();
 
         if (HospitalController.loginUser(username, password)) {
-            if (username.charAt(0) == 'D') doctorConsole.showDoctorPanel();
-            else if (username.charAt(0) == 'W') watchmanConsole.showWatchmanPanel();
-            else if (username.charAt(0) == 'J') janitorConsole.showJanitorPanel();
-            else if (username.charAt(0) == 'S') secretaryConsole.showSecretaryPanel();
+            if (username.charAt(0) == 'D') while (shouldKeepRendering) doctorConsole.showDoctorPanel();
+            else if (username.charAt(0) == 'W') while (shouldKeepRendering) watchmanConsole.showWatchmanPanel();
+            else if (username.charAt(0) == 'J') while (shouldKeepRendering) janitorConsole.showJanitorPanel();
+            else if (username.charAt(0) == 'S') while (shouldKeepRendering) secretaryConsole.showSecretaryPanel();
+
         } else {
-            System.out.println("Username or password is incorrect!");
+            System.out.println("Username or password is incorrect or you might have been banned!");
             waitOnEnter();
         }
     }
